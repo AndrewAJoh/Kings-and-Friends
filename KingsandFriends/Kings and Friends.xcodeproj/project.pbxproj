@@ -16,6 +16,8 @@
 		0F043BE9238B89B300BD5C03 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0F043BE7238B89B300BD5C03 /* LaunchScreen.storyboard */; };
 		0F043BF4238B89B300BD5C03 /* Kings_and_FriendsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F043BF3238B89B300BD5C03 /* Kings_and_FriendsTests.swift */; };
 		0F043BFF238B89B300BD5C03 /* Kings_and_FriendsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F043BFE238B89B300BD5C03 /* Kings_and_FriendsUITests.swift */; };
+		0F66672A238E36FE00A4972C /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F666729238E36FE00A4972C /* Card.swift */; };
+		0F66672C238E37E500A4972C /* shuffleDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F66672B238E37E500A4972C /* shuffleDeck.swift */; };
 		0FD98731238CB02100DA8799 /* LogoImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD98730238CB02100DA8799 /* LogoImage.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +54,8 @@
 		0F043BFA238B89B300BD5C03 /* Kings and FriendsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Kings and FriendsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F043BFE238B89B300BD5C03 /* Kings_and_FriendsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kings_and_FriendsUITests.swift; sourceTree = "<group>"; };
 		0F043C00238B89B300BD5C03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0F666729238E36FE00A4972C /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		0F66672B238E37E500A4972C /* shuffleDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shuffleDeck.swift; sourceTree = "<group>"; };
 		0FD98730238CB02100DA8799 /* LogoImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +111,8 @@
 				0F043BDB238B89B200BD5C03 /* SceneDelegate.swift */,
 				0F043BE0238B89B200BD5C03 /* ContentView.swift */,
 				0FD98730238CB02100DA8799 /* LogoImage.swift */,
+				0F666729238E36FE00A4972C /* Card.swift */,
+				0F66672B238E37E500A4972C /* shuffleDeck.swift */,
 				0F043BE2238B89B300BD5C03 /* Assets.xcassets */,
 				0F043BE7238B89B300BD5C03 /* LaunchScreen.storyboard */,
 				0F043BEA238B89B300BD5C03 /* Info.plist */,
@@ -276,8 +282,10 @@
 				0F043BDF238B89B200BD5C03 /* Kings_and_Friends.xcdatamodeld in Sources */,
 				0F043BDA238B89B200BD5C03 /* AppDelegate.swift in Sources */,
 				0FD98731238CB02100DA8799 /* LogoImage.swift in Sources */,
+				0F66672A238E36FE00A4972C /* Card.swift in Sources */,
 				0F043BE1238B89B200BD5C03 /* ContentView.swift in Sources */,
 				0F043BDC238B89B200BD5C03 /* SceneDelegate.swift in Sources */,
+				0F66672C238E37E500A4972C /* shuffleDeck.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
