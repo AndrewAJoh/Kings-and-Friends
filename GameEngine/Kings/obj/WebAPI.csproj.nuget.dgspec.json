@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\WebAPI\\WebAPI.csproj": {}
+    "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\Kings\\WebAPI.csproj": {}
   },
   "projects": {
     "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\Game\\Game.csproj": {
@@ -65,14 +65,14 @@
         }
       }
     },
-    "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\WebAPI\\WebAPI.csproj": {
+    "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\Kings\\WebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\WebAPI\\WebAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\Kings\\WebAPI.csproj",
         "projectName": "WebAPI",
-        "projectPath": "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\WebAPI\\WebAPI.csproj",
+        "projectPath": "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\Kings\\WebAPI.csproj",
         "packagesPath": "C:\\Users\\Andrew\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\WebAPI\\obj\\",
+        "outputPath": "C:\\Users\\Andrew\\source\\repos\\Kings-And-Friends\\GameEngine\\Kings\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

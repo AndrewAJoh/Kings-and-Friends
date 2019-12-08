@@ -7,33 +7,33 @@ namespace Game.Services
 {
     public static class GameService
     {
-        public static GameRunner GameRunner{get;}
+        public static GameStatus GameStatus{get;}
 
         static GameService()
         {
-            GameRunner = new GameRunner();
+            GameStatus = new GameStatus();
         }
         public static string Get()
         {
-            var output = JsonConvert.SerializeObject(GameRunner.GameStatus);
+            var output = JsonConvert.SerializeObject(GameStatus);
             return output;
         }
 
         public static void DrawCard(int playerId)
         {
-            GameRunner.DrawCard(playerId);
+            GameStatus.DrawFromDeck(playerId);
         }
 
         public static string PlayerJoin(string playerName)
         {
-            if (GameRunner.GetPlayerCount() > 3)
+            if (GameStatus.GetPlayerCount() > 3)
             {
                 return "The game is full.";
             }
             else
             {
-                var result = GameRunner.AddPlayer(playerName);
-                var output = JsonConvert.SerializeObject(result);
+                GameStatus.AddPlayer(playerName);
+                var output = JsonConvert.SerializeObject(GameStatus);
                 return output;
             }
         }
