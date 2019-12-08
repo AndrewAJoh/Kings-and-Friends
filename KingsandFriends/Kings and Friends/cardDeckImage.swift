@@ -8,14 +8,14 @@
 
 import SwiftUI
 
-struct cardDeck: View {
+struct cardDeckImage: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Image("cardDeck")
     }
 }
 
 struct cardDeck_Previews: PreviewProvider {
     static var previews: some View {
-        cardDeck()
+        cardDeckImage()
     }
 }

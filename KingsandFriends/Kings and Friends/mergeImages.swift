@@ -7,3 +7,20 @@
 //
 
 import Foundation
+import SwiftUI
+func mergeImages(a: String, b: String) {
+    var image1 = Image(a)
+    var image2 = Image(b)
+    
+    var size = CGSize(width: 300, height: 300)
+    UIGraphicsBeginImageContext(size)
+
+    let areaSize = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+    image1.draw(in: areaSize)
+
+    image2.draw(in: areaSize, blendMode: .normal, alpha: 0.8)
+
+    var newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+    UIGraphicsEndImageContext()
+}
+

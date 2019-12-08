@@ -18,6 +18,7 @@
 		0F043BFF238B89B300BD5C03 /* Kings_and_FriendsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F043BFE238B89B300BD5C03 /* Kings_and_FriendsUITests.swift */; };
 		0F66672A238E36FE00A4972C /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F666729238E36FE00A4972C /* Card.swift */; };
 		0F66672C238E37E500A4972C /* shuffleDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F66672B238E37E500A4972C /* shuffleDeck.swift */; };
+		0F7E59D1238EE2700070F76A /* cardDeckImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F7E59D0238EE2700070F76A /* cardDeckImage.swift */; };
 		0FD98731238CB02100DA8799 /* LogoImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD98730238CB02100DA8799 /* LogoImage.swift */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		0F043C00238B89B300BD5C03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0F666729238E36FE00A4972C /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		0F66672B238E37E500A4972C /* shuffleDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shuffleDeck.swift; sourceTree = "<group>"; };
+		0F7E59D0238EE2700070F76A /* cardDeckImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cardDeckImage.swift; sourceTree = "<group>"; };
 		0FD98730238CB02100DA8799 /* LogoImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -111,6 +113,7 @@
 				0F043BDB238B89B200BD5C03 /* SceneDelegate.swift */,
 				0F043BE0238B89B200BD5C03 /* ContentView.swift */,
 				0FD98730238CB02100DA8799 /* LogoImage.swift */,
+				0F7E59D0238EE2700070F76A /* cardDeckImage.swift */,
 				0F666729238E36FE00A4972C /* Card.swift */,
 				0F66672B238E37E500A4972C /* shuffleDeck.swift */,
 				0F043BE2238B89B300BD5C03 /* Assets.xcassets */,
@@ -281,6 +284,7 @@
 			files = (
 				0F043BDF238B89B200BD5C03 /* Kings_and_Friends.xcdatamodeld in Sources */,
 				0F043BDA238B89B200BD5C03 /* AppDelegate.swift in Sources */,
+				0F7E59D1238EE2700070F76A /* cardDeckImage.swift in Sources */,
 				0FD98731238CB02100DA8799 /* LogoImage.swift in Sources */,
 				0F66672A238E36FE00A4972C /* Card.swift in Sources */,
 				0F043BE1238B89B200BD5C03 /* ContentView.swift in Sources */,
