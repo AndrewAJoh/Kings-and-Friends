@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "Kings\WebAPI.csproj", "{79362C18-73FB-432B-8BD2-2DC6AEE30497}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game", "Game\Game.csproj", "{E8432DC0-D205-404E-96C1-D819C23509C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79362C18-73FB-432B-8BD2-2DC6AEE30497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79362C18-73FB-432B-8BD2-2DC6AEE30497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79362C18-73FB-432B-8BD2-2DC6AEE30497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79362C18-73FB-432B-8BD2-2DC6AEE30497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8432DC0-D205-404E-96C1-D819C23509C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8432DC0-D205-404E-96C1-D819C23509C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8432DC0-D205-404E-96C1-D819C23509C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8432DC0-D205-404E-96C1-D819C23509C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1DFB3976-6E4A-4655-8704-0EBB83F727D6}
+	EndGlobalSection
+EndGlobal
