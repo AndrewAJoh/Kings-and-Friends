@@ -1,0 +1,16 @@
+C:\Users\Andrew\source\repos\Kings\Game\obj\Debug\netcoreapp3.0\Game.AssemblyInfoInputs.cache
+C:\Users\Andrew\source\repos\Kings\Game\obj\Debug\netcoreapp3.0\Game.AssemblyInfo.cs
+C:\Users\Andrew\source\repos\Kings\Game\bin\Debug\netcoreapp3.0\Game.deps.json
+C:\Users\Andrew\source\repos\Kings\Game\bin\Debug\netcoreapp3.0\Game.dll
+C:\Users\Andrew\source\repos\Kings\Game\bin\Debug\netcoreapp3.0\Game.pdb
+C:\Users\Andrew\source\repos\Kings\Game\obj\Debug\netcoreapp3.0\Game.dll
+C:\Users\Andrew\source\repos\Kings\Game\obj\Debug\netcoreapp3.0\Game.pdb
+C:\Users\Andrew\source\repos\Kings\Game\obj\Debug\netcoreapp3.0\Game.csprojAssemblyReference.cache
+C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\bin\Debug\netcoreapp3.0\Game.deps.json
+C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\bin\Debug\netcoreapp3.0\Game.dll
+C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\bin\Debug\netcoreapp3.0\Game.pdb
+C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcoreapp3.0\Game.AssemblyInfoInputs.cache
+C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcoreapp3.0\Game.AssemblyInfo.cs
+C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcoreapp3.0\Game.dll
+C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcoreapp3.0\Game.pdb
+C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcoreapp3.0\Game.csprojAssemblyReference.cache
