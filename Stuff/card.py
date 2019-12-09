@@ -5,3 +5,5 @@ class Card:
         self.suit = suit
         self.color = color
         self.position = int
+    def __str__(self):
+        return str(self.suit)+str(self.value)
