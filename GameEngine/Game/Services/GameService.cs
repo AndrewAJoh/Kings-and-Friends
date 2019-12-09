@@ -37,5 +37,19 @@ namespace Game.Services
                 return output;
             }
         }
+
+        public static string EndTurn(int playerId)
+        {
+            if (GameStatus.GetPlayerTurn() == playerId)
+            {
+                GameStatus.EndTurn(playerId);
+                var output = JsonConvert.SerializeObject(GameStatus);
+                return output;
+            }
+            else
+            {
+                return "Please wait your turn.";
+            }
+        }
     }
 }

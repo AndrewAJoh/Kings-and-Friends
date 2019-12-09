@@ -39,5 +39,13 @@ namespace Kings.Controllers
         }
 
 
+        [Route("EndTurn")]
+        [HttpPost]
+        public string EndTurn([FromBody] int playerId)
+        {
+            return GameService.EndTurn(playerId);
+        }
+
+
     }
 }

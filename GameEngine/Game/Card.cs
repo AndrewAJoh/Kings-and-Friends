@@ -5,11 +5,13 @@ namespace Game
 {
     public class Card : IComparable<Card>
     {
+        public int Id;
         public string Suit;
         public Rank Rank;
         public int Position;
-        public Card(string suit, Rank rank, int position)
+        public Card(int id, string suit, Rank rank, int position)
         {
+            Id = id;
             Suit = suit;
             Rank = rank;
             Position = position;

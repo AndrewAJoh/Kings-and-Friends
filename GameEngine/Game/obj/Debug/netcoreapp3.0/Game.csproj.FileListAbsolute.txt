@@ -13,3 +13,4 @@ C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcore
 C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcoreapp3.0\Game.AssemblyInfo.cs
 C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcoreapp3.0\Game.dll
 C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcoreapp3.0\Game.pdb
+C:\Users\Andrew\source\repos\Kings-And-Friends\GameEngine\Game\obj\Debug\netcoreapp3.0\Game.csprojAssemblyReference.cache
