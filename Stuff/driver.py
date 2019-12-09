@@ -46,25 +46,27 @@ def driver():
     print(p4HandString[:-2])
 
 
+def createDeck():
+    # Creates and shuffles 52-card deck
+    deck = []
+    for i in range(13):
+        deck.append(Card(i + 1, "H", "R"))
+        deck.append(Card(i + 1, "D", "R"))
+        deck.append(Card(i + 1, "C", "B"))
+        deck.append(Card(i + 1, "S", "B"))
+        random.shuffle(deck)
+    return deck
+
+
 def distributeCards(playerArray, deck):
     # Distributes 7 cards to each player
     for player in playerArray:
         i = 0
         while i < 7:
-            player.hand.append(deck.pop())
+            thisCard = deck.pop()
+            thisCard.position = i
+            player.hand.append(thisCard)
             i += 1
-
-
-def createDeck():
-    # Creates and shuffles 52-card deck
-    deck = []
-    for i in range(13):
-        deck.append(Card(i + 1, "H"))
-        deck.append(Card(i + 1, "D"))
-        deck.append(Card(i + 1, "C"))
-        deck.append(Card(i + 1, "S"))
-        random.shuffle(deck)
-    return deck
 
 
 def populateTable(deck):
@@ -86,6 +88,16 @@ def populateTable(deck):
     west.append(deck.pop())
     middle = deck
     return table
+
+
+def placeCard(player, card, pile, table):
+    # Takes input card from current player through button action, places card in desired pile.
+    # Card will be a card object containing value, suit, and location in player hand list
+    # Must contain logic for alternating black/red as well as being 1 value lower than previous
+    if table.pile[-1].color != card.color:
+        if card.value == table.pile[-1].value - 1:
+            thisCard = player.hand.pop(card.location)
+            table.pile.append(thisCard)
 
 
 if __name__ == "__main__":
