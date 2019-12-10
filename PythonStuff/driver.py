@@ -1,49 +1,48 @@
 from player import Player
 from card import Card
+from table import Table
 import random
 
 
 def driver():
-    p1 = Player(input("Enter Name: "))
-    p2 = Player(input("Enter Name: "))
-    p3 = Player(input("Enter Name: "))
-    p4 = Player(input("Enter Name: "))
-    playerArray = [p1, p2, p3, p4]
+    isGameActivated = True
+    playerArray = []
+    while len(playerArray) != 4:
+        playerArray = addPlayer(playerArray)
     deck = createDeck()
     distributeCards(playerArray, deck)
-    table = populateTable(deck)
+    table = Table(deck)
+    # random.shuffle(playerArray)
+    currentPlayer = playerArray[0]
+    currentPlayer.isTurn = True
+    while isGameActivated == True:
+        printTable(table)
+        # draw card
+        currentPlayer = checkIfTurn(playerArray)
+        drawCard(currentPlayer, table)
+        print("It is %s's turn" % currentPlayer.name)
+        currentHand = ""
+        for item in currentPlayer.hand:
+            currentHand = currentHand + item.string + ", "
+        print("Your hand: %s" % currentHand[:-2])
 
-    print(p1.name + " has joined the table!")
-    print("Is turn? %s" % p1.isTurn)
-    print("%s has these cards: " % p1.name)
-    p1HandString = ""
-    for card in p1.hand:
-        p1HandString = p1HandString + str(card.value) + str(card.suit) + ", "
-    print(p1HandString[:-2])
-
-    print(p2.name + " has joined the table!")
-    print("Is turn? %s" % p2.isTurn)
-    print("%s has these cards: " % p2.name)
-    p2HandString = ""
-    for card in p2.hand:
-        p2HandString = p2HandString + str(card.value) + str(card.suit) + ", "
-    print(p2HandString[:-2])
-
-    print(p3.name + " has joined the table!")
-    print("Is turn? %s" % p3.isTurn)
-    print("%s has these cards: " % p3.name)
-    p3HandString = ""
-    for card in p3.hand:
-        p3HandString = p3HandString + str(card.value) + str(card.suit) + ", "
-    print(p3HandString[:-2])
-
-    print(p4.name + " has joined the table!")
-    print("Is turn? %s" % p4.isTurn)
-    print("%s has these cards: " % p4.name)
-    p4HandString = ""
-    for card in p4.hand:
-        p4HandString = p4HandString + str(card.value) + str(card.suit) + ", "
-    print(p4HandString[:-2])
+        command = input(
+            "Do you want to placeCard() , movePile() , or endTurn() ?")
+        if command == "placeCard()":
+            print("Your cards are: %s" % currentHand)
+            card = input("What card would you like to move?")
+            for thisCard in currentPlayer.hand:
+                if thisCard.string == card:
+                    card = currentPlayer.hand.pop(thisCard.position)
+            pile = input(
+                "What pile would you like to place it on? (N, SW, E, etc.)")
+            placeCard(currentPlayer, card, pile, table)
+        elif command == "movePile()":
+            pile = input("What pile would you like to move?")
+            destination = input("Where would you like to place this pile?")
+            movePile(pile, destination, table)
+        elif command == "endTurn()":
+            endTurn(playerArray, currentPlayer)
 
 
 def createDeck():
@@ -69,37 +68,189 @@ def distributeCards(playerArray, deck):
             i += 1
 
 
-def populateTable(deck):
-    # Populates 3x3 array with 4 starter cards at N, S, E, W, and the deck in the center
-    table = [[[], [], []], [[], [], []], [[], [], []]]
-    north = table[2][1]
-    northeast = table[2][2]
-    east = table[1][2]
-    southeast = table[0][2]
-    south = table[0][1]
-    southwest = table[0][0]
-    west = table[1][0]
-    northwest = table[2][0]
-    center = table[1][1]
-
-    north.append(deck.pop())
-    south.append(deck.pop())
-    east.append(deck.pop())
-    west.append(deck.pop())
-    middle = deck
-    return table
-
-
 def placeCard(player, card, pile, table):
     # Takes input card from current player through button action, places card in desired pile.
     # Card will be a card object containing value, suit, and location in player hand list
     # Must contain logic for alternating black/red as well as being 1 value lower than previous
-    if table.pile[-1].color != card.color:
-        if card.value == table.pile[-1].value - 1:
-            thisCard = player.hand.pop(card.location)
-            table.pile.append(thisCard)
+    if pile == "NW":
+        if table.NW[-1].color != card.color:
+            if card.value == table.NW[-1].value - 1:
+                thisCard = player.hand.pop(card.position)
+                table.NW.append(thisCard)
+            else:
+                print("error")
+        else:
+            print("error")
+    elif pile == "N":
+        if table.N[-1].color != card.color:
+            if card.value == table.N[-1].value - 1:
+                thisCard = player.hand.pop(card.position)
+                table.N.append(thisCard)
+            else:
+                print("error")
+        else:
+            print("error")
+    elif pile == "NE":
+        if table.NE[-1].color != card.color:
+            if card.value == table.NE[-1].value - 1:
+                thisCard = player.hand.pop(card.position)
+                table.NE.append(thisCard)
+            else:
+                print("error")
+        else:
+            print("error")
+    elif pile == "W":
+        if table.W[-1].color != card.color:
+            if card.value == table.W[-1].value - 1:
+                thisCard = player.hand.pop(card.position)
+                table.W.append(thisCard)
+            else:
+                print("error")
+        else:
+            print("error")
+    elif pile == "E":
+        if table.E[-1].color != card.color:
+            if card.value == table.E[-1].value - 1:
+                thisCard = player.hand.pop(card.position)
+                table.E.append(thisCard)
+            else:
+                print("error")
+        else:
+            print("error")
+    elif pile == "SW":
+        if table.SW[-1].color != card.color:
+            if card.value == table.SW[-1].value - 1:
+                thisCard = player.hand.pop(card.position)
+                table.SW.append(thisCard)
+            else:
+                print("error")
+        else:
+            print("error")
+    elif pile == "S":
+        if table.S[-1].color != card.color:
+            if card.value == table.S[-1].value - 1:
+                thisCard = player.hand.pop(card.position)
+                table.S.append(thisCard)
+            else:
+                print("error")
+        else:
+            print("error")
+    elif pile == "SE":
+        if table.SE[-1].color != card.color:
+            if card.value == table.SE[-1].value - 1:
+                thisCard = player.hand.pop(card.position)
+                table.SE.append(thisCard)
+            else:
+                print("error")
+        else:
+            print("error")
     else:
-        return "error"
+        print("error")
+
+
+def printTable(table):
+    nw = ""
+    n = ""
+    ne = ""
+    w = ""
+    d = ""
+    e = ""
+    sw = ""
+    s = ""
+    se = ""
+    if len(table.NW) != 0:
+        for item in table.NW:
+            nw = nw + str(item.value) + str(item.suit) + ", "
+    if len(table.N) != 0:
+        for item in table.N:
+            n = n + str(item.value) + str(item.suit) + ", "
+    if len(table.NE) != 0:
+        for item in table.NE:
+            ne = ne + str(item.value) + str(item.suit) + ", "
+    if len(table.W) != 0:
+        for item in table.W:
+            w = w + str(item.value) + str(item.suit) + ", "
+    if len(table.E) != 0:
+        for item in table.E:
+            e = e + str(item.value) + str(item.suit) + ", "
+    if len(table.SW) != 0:
+        for item in table.SW:
+            sw = sw + str(item.value) + str(item.suit) + ", "
+    if len(table.S) != 0:
+        for item in table.S:
+            s = s + str(item.value) + str(item.suit) + ", "
+    if len(table.SE) != 0:
+        for item in table.SE:
+            se = se + str(item.value) + str(item.suit) + ", "
+
+    print("|  {0}  |  {1}  |  {2}  |".format(
+        nw, n, ne))
+    print("|  {0}  |    |  {1}  |".format(
+        w, e))
+    print("|  {0}  |  {1}  |  {2}  |".format(
+        sw, s, se))
+    print("")
+
+
+def drawCard(player, table):
+    thisCard = table.Deck.pop()
+    player.hand.append(thisCard)
+
+
+def addPlayer(playerArray):
+    playerArray.append(Player(input("Enter Name: ")))
+    return playerArray
+
+
+def movePile(pile, destination, table):
+    # check if there are cards in destination pile
+    if len(getattr(table, destination)) != 0:
+        # check for opposite color rule
+        if getattr(table, destination)[-1].color != getattr(table, pile)[0].color:
+            # check for sequence rule
+            if getattr(table, pile)[0].value == getattr(table, destination)[-1].value - 1:
+                # iterate through pile loop and remove cards, placing in destination list
+                for card in getattr(table, pile):
+                    getattr(table, destination).append(
+                        getattr(table, pile).pop(card))
+            else:
+                print(
+                    "Highest card is not one less than the last card in destination pile")
+        else:
+            print(
+                "Highest card is not of opposite color to the last card in destination pile")
+    else:
+        # if there are no cards in destination, only kings can be put in corner
+        if destination == "NW" or destination == "NE" or destination == "SW" or destination == "SE":
+            # check if highest card is king
+            if getattr(table, pile)[0].value == 13:
+                while len(getattr(table, pile)) > 0:
+                    getattr(table, destination).append(
+                        getattr(table, pile).pop(0))
+            else:
+                print("Only kings can start in the corner")
+        else:
+            # if not going in corner, can place any card
+            while len(getattr(table, pile)) > 0:
+                getattr(table, destination).append(
+                    getattr(table, pile).pop(0))
+
+
+def endTurn(playerArray, currentPlayer):
+    index = playerArray.index(currentPlayer)
+    currentPlayer.isTurn = False
+    if index == 3:
+        newIndex = 0
+        playerArray[newIndex].isTurn = True
+    else:
+        playerArray[index + 1].isTurn = True
+
+
+def checkIfTurn(playerArray):
+    for player in playerArray:
+        if player.isTurn == True:
+            currentPlayer = player
+            return currentPlayer
 
 
 if __name__ == "__main__":

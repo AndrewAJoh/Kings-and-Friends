@@ -5,3 +5,4 @@ class Card:
         self.suit = suit
         self.color = color
         self.position = int
+        self.string = str(value) + str(suit)
