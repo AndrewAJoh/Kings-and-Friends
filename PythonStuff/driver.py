@@ -2,13 +2,18 @@ from player import Player
 from card import Card
 from table import Table
 import random
-
+from flask import request, Flask, jsonify
+import json
+import sys
+from gamestatus import GameStatus, Serialize
 
 def driver():
     isGameActivated = True
-    playerArray = []
-    while len(playerArray) != 4:
-        playerArray = addPlayer(playerArray)
+    p1 = GameStatus.playerList[0]
+    p2 = GameStatus.playerList[1]
+    p3 = GameStatus.playerList[2]
+    p4 = GameStatus.playerList[3]
+    playerArray = [p1, p2, p3, p4]
     deck = createDeck()
     distributeCards(playerArray, deck)
     table = Table(deck)
@@ -43,6 +48,14 @@ def driver():
             movePile(pile, destination, table)
         elif command == "endTurn()":
             endTurn(playerArray, currentPlayer)
+
+def createPlayer(playerName):
+    player = Player(playerName)
+    GameStatus.playerList.append(player)
+    if (len(GameStatus.playerList) == 4):
+        sys.stdout.write("The game will now start")
+        driver()
+        
 
 
 def createDeck():
@@ -252,6 +265,19 @@ def checkIfTurn(playerArray):
             currentPlayer = player
             return currentPlayer
 
+#WebAPI
+url = 'https://localhost:5000'
+app = Flask(__name__)
 
-if __name__ == "__main__":
-    driver()
+@app.route('/JoinGame', methods=['POST'])
+def JoinGame():
+    playerName = request.get_json()
+    sys.stdout.write('Received: ' + playerName)
+    createPlayer(playerName)
+    sys.stdout.write('There are now ' + str(len(GameStatus.playerList)) + ' players in the game')
+    result = Serialize()
+    return result
+
+#if python driver.py is called
+if __name__ == '__main__':
+    app.run(host='localhost', debug=True, port=5000, ssl_context='adhoc')
