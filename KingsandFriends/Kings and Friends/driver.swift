@@ -1,14 +1,18 @@
-from player import Player
-from card import Card
-from table import Table
-import random
-from tabulate import tabulate as t
+//
+//  driver.swift
+//  Kings and Friends
+//
+//  Created by lundergust on 12/10/19.
+//  Copyright © 2019 lundergust. All rights reserved.
+//
 
+import Foundation
+import UIKit
 
-def driver():
-    isGameActivated = True
-    playerArray = []
-    while len(playerArray) != 4:
+func driver() {
+    var isGameActivated = true
+    var playerArray = [Player]()
+    while playerArray.count != 4 {
         playerArray = addPlayer(playerArray)
     deck = createDeck()
     distributeCards(playerArray, deck)
@@ -44,6 +48,7 @@ def driver():
             movePile(pile, destination, table)
         elif command == "endTurn()":
             endTurn(playerArray, currentPlayer)
+}
 
 
 def createDeck():
@@ -56,6 +61,7 @@ def createDeck():
         deck.append(Card(i + 1, "S", "B"))
         random.shuffle(deck)
     return deck
+
 
 
 def distributeCards(playerArray, deck):
@@ -201,61 +207,81 @@ def drawCard(player, table):
     player.hand.append(thisCard)
 
 
-def addPlayer(playerArray):
-    playerArray.append(Player(input("Enter Name: ")))
+func addPlayer(playerArray: [Player]) {
+    //1. Create the alert controller.
+    let name = UIAlertController(title: "Join Game", message: "Enter your name", preferredStyle: .alert)
+
+    //2. Add the text field. You can configure it however you need.
+    name.addTextField { (textField) in
+        textField.text = "Your Name Here"
+    }
+
+    // 3. Grab the value from the text field, and print it when the user clicks OK.
+    name.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak name] (_) in
+        let textField = name?.textFields![0] // Force unwrapping because we know it exists.
+        print("Text field: \(textField?.text ?? "The addPlayer Function caused and Error")")
+    }))
+
+    // 4. Present the alert.
+    self.present(name, animated: true, completion: nil)
+    playerArray.append(Player(name: name))
     return playerArray
+    }
 
 
-def movePile(pile, destination, table):
-    # check if there are cards in destination pile
-    if len(getattr(table, destination)) != 0:
-        # check for opposite color rule
-        if getattr(table, destination)[-1].color != getattr(table, pile)[0].color:
-            # check for sequence rule
-            if getattr(table, pile)[0].value == getattr(table, destination)[-1].value - 1:
-                # iterate through pile loop and remove cards, placing in destination list
-                for card in getattr(table, pile):
-                    getattr(table, destination).append(
-                        getattr(table, pile).pop(card))
-            else:
-                print(
-                    "Highest card is not one less than the last card in destination pile")
-        else:
-            print(
-                "Highest card is not of opposite color to the last card in destination pile")
-    else:
-        # if there are no cards in destination, only kings can be put in corner
-        if destination == "NW" or destination == "NE" or destination == "SW" or destination == "SE":
-            # check if highest card is king
-            if getattr(table, pile)[0].value == 13:
-                while len(getattr(table, pile)) > 0:
-                    getattr(table, destination).append(
-                        getattr(table, pile).pop(0))
-            else:
-                print("Only kings can start in the corner")
-        else:
-            # if not going in corner, can place any card
-            while len(getattr(table, pile)) > 0:
-                getattr(table, destination).append(
-                    getattr(table, pile).pop(0))
+//    func movePile(pile: [Card], destination: [Card], table: Table){
+////     check if there are cards in destination pile
+//        if getattr(table, destination).count != 0 {
+//        # check for opposite color rule
+//        if getattr(table, destination)[-1].color != getattr(table, pile)[0].color:
+//            # check for sequence rule
+//            if getattr(table, pile)[0].value == getattr(table, destination)[-1].value - 1:
+//                # iterate through pile loop and remove cards, placing in destination list
+//                for card in getattr(table, pile):
+//                    getattr(table, destination).append(
+//                        getattr(table, pile).pop(card))
+//            else:
+//                print(
+//                    "Highest card is not one less than the last card in destination pile")
+//        else:
+//            print(
+//                "Highest card is not of opposite color to the last card in destination pile")
+//    else:
+//        # if there are no cards in destination, only kings can be put in corner
+//        if destination == "NW" or destination == "NE" or destination == "SW" or destination == "SE":
+//            # check if highest card is king
+//            if getattr(table, pile)[0].value == 13:
+//                while len(getattr(table, pile)) > 0:
+//                    getattr(table, destination).append(
+//                        getattr(table, pile).pop(0))
+//            else:
+//                print("Only kings can start in the corner")
+//        else:
+//            # if not going in corner, can place any card
+//            while len(getattr(table, pile)) > 0:
+//                getattr(table, destination).append(
+//                    getattr(table, pile).pop(0))
+//        }
+//}
+    
 
-
-def endTurn(playerArray, currentPlayer):
-    index = playerArray.index(currentPlayer)
+func endTurn(playerArray: [Player], currentPlayer: Player) {
+    var indexOfPlayer: Player
+    indexOfPlayer = playerArray.index(currentPlayer)
     currentPlayer.isTurn = False
-    if index == 3:
+    if indexOfPlayer == 3:
         newIndex = 0
         playerArray[newIndex].isTurn = True
     else:
         playerArray[index + 1].isTurn = True
+}
 
 
-def checkIfTurn(playerArray):
-    for player in playerArray:
-        if player.isTurn == True:
+func checkIfTurn(playerArray: [Player]) -> Player {
+    for player in playerArray {
+        if player.isTurn == true {
             currentPlayer = player
             return currentPlayer
-
-
-if __name__ == "__main__":
-    driver()
+        }
+    }
+}

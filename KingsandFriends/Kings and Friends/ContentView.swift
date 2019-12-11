@@ -107,3 +107,8 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+
+func combineImages() {
+    
+}
