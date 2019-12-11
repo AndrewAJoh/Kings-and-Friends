@@ -2,7 +2,10 @@ from player import Player
 from card import Card
 from table import Table
 import random
-from tabulate import tabulate as t
+from flask import request, Flask, jsonify
+import json
+import sys
+from gamestatus import GameStatus, Serialize
 
 
 def driver():
@@ -46,6 +49,14 @@ def driver():
             movePile(pile, destination, table)
         elif command == "endTurn()":
             endTurn(playerArray, currentPlayer)
+
+
+def createPlayer(playerName):
+    player = Player(playerName)
+    GameStatus.playerList.append(player)
+    if (len(GameStatus.playerList) == 4):
+        sys.stdout.write("The game will now start")
+        driver()
 
 
 def createDeck():
@@ -186,15 +197,12 @@ def printTable(table):
         for item in table.SE:
             se = se + str(item.value) + str(item.suit) + ", "
 
-    theTable = [[nw[:-2], n[:-2], ne[:-2]],
-                [w[:-2], "", e[:-2]], [se[:-2], s[:-2], se[:-2]]]
-    print(t(theTable))
-    # print("|  {0}  |  {1}  |  {2}  |".format(
-    #     nw, n, ne))
-    # print("|  {0}  |    |  {1}  |".format(
-    #     w, e))
-    # print("|  {0}  |  {1}  |  {2}  |".format(
-    #     sw, s, se))
+    print("|  {0}  |  {1}  |  {2}  |".format(
+        nw, n, ne))
+    print("|  {0}  |    |  {1}  |".format(
+        w, e))
+    print("|  {0}  |  {1}  |  {2}  |".format(
+        sw, s, se))
     print("")
 
 
@@ -259,6 +267,22 @@ def checkIfTurn(playerArray):
             return currentPlayer
 
 
+# WebAPI
+url = 'https://localhost:5000'
+app = Flask(__name__)
+
+
+@app.route('/JoinGame', methods=['POST'])
+def JoinGame():
+    playerName = request.get_json()
+    sys.stdout.write('Received: ' + playerName)
+    createPlayer(playerName)
+    sys.stdout.write('There are now ' +
+                     str(len(GameStatus.playerList)) + ' players in the game')
+    result = Serialize()
+    return result
+
+
 # if python driver.py is called
 if __name__ == '__main__':
-    terminalDriver.py
+    app.run(host='localhost', debug=True, port=5000, ssl_context='adhoc')

@@ -13,7 +13,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack() {
-        Color.init(red: 0.13, green: 0.4, blue: 0.13).edgesIgnoringSafeArea(.all)
+            Color.init(red: 0.13, green: 0.4, blue: 0.13).edgesIgnoringSafeArea(.all)
             LogoImage()
 //                .offset(y: -100)
             
@@ -42,6 +42,9 @@ struct ContentView: View {
                     .resizable()
                         .frame(width: 71.4, height: 100.0)
                         .offset(x: 130.0)
+                    Image("7C")
+                    .resizable()
+                        .frame(width: 71.4, height: 100)
                 }
             }
             
@@ -82,16 +85,13 @@ struct ContentView: View {
                         Image("6C")
                         .resizable()
                             .frame(width: 71.4, height: 100)
-                            .offset(x: -80, y: 25)
+//                            .offset(x: -80, y: 25)
                         Image("5D")
                         .resizable()
                             .frame(width: 71.4, height: 100)
-                            .offset(x: -160, y: 50)
+//                            .offset(x: -160, y: 50)
                            
                 }
-                
-                
-
 
             }
             .padding([.top], 0.0)
