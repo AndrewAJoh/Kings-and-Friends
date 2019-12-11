@@ -1,0 +1,46 @@
+{
+	"info": {
+		"_postman_id": "01934839-2cf9-4b56-a393-2b306104e036",
+		"name": "Kings Python",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Join Game",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"Andrew\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5000/JoinGame",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"JoinGame"
+					]
+				},
+				"description": "User will automatically call this when they connect to the game"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
