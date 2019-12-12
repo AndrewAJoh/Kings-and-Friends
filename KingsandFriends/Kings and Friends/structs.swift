@@ -9,10 +9,11 @@
 import Foundation
 struct Card {
     var value: Int
-    var suit: Int
+    var suit: String
     var color: String
     var image: String
     var string: String
+    var position: Int
 }
 
 struct Player {

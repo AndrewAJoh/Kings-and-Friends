@@ -16,6 +16,7 @@ struct LogoImage: View {
         .overlay(
             Circle().stroke(Color.gray, lineWidth: 8))
 //            .shadow(radius:10)
+            .padding(.all, 200)
     }
 }
 
