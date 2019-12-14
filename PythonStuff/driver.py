@@ -8,66 +8,49 @@ import sys
 from gamestatus import GameStatus, Serialize
 
 def driver():
-    isGameActivated = True
-    p1 = GameStatus.playerList[0]
-    p2 = GameStatus.playerList[1]
-    p3 = GameStatus.playerList[2]
-    p4 = GameStatus.playerList[3]
-    playerArray = [p1, p2, p3, p4]
-    deck = createDeck()
-    distributeCards(playerArray, deck)
-    table = Table(deck)
-    # random.shuffle(playerArray)
-    currentPlayer = playerArray[0]
+    table = GameStatus.table
+    currentPlayer = GameStatus.playerList[0]
     currentPlayer.isTurn = True
-    while isGameActivated == True:
-        printTable(table)
-        # draw card
-        currentPlayer = checkIfTurn(playerArray)
-        drawCard(currentPlayer, table)
-        print("It is %s's turn" % currentPlayer.name)
-        currentHand = ""
-        for item in currentPlayer.hand:
-            currentHand = currentHand + item.string + ", "
-        print("Your hand: %s" % currentHand[:-2])
+    return None
+    printTable(table)
+    # While isGameActivated = true
+    currentPlayer = checkIfTurn(playerArray)
+    drawCard(currentPlayer, table)
+    currentHand = ""
+    for item in currentPlayer.hand:
+        currentHand = currentHand + item.string + ", "
+    print("Your hand: %s" % currentHand[:-2])
 
-        command = input(
-            "Do you want to placeCard() , movePile() , or endTurn() ?")
-        if command == "placeCard()":
-            print("Your cards are: %s" % currentHand)
-            card = input("What card would you like to move?")
-            for thisCard in currentPlayer.hand:
-                if thisCard.string == card:
-                    card = currentPlayer.hand.pop(thisCard.position)
-            pile = input(
-                "What pile would you like to place it on? (N, SW, E, etc.)")
-            placeCard(currentPlayer, card, pile, table)
-        elif command == "movePile()":
-            pile = input("What pile would you like to move?")
-            destination = input("Where would you like to place this pile?")
-            movePile(pile, destination, table)
-        elif command == "endTurn()":
-            endTurn(playerArray, currentPlayer)
-
+    command = input(
+        "Do you want to placeCard() , movePile() , or endTurn() ?")
+    if command == "placeCard()":
+        print("Your cards are: %s" % currentHand)
+        card = input("What card would you like to move?")
+        for thisCard in currentPlayer.hand:
+            if thisCard.string == card:
+                card = currentPlayer.hand.pop(thisCard.position)
+        pile = input(
+            "What pile would you like to place it on? (N, SW, E, etc.)")
+        placeCard(currentPlayer, card, pile, table)
+    elif command == "movePile()":
+        pile = input("What pile would you like to move?")
+        destination = input("Where would you like to place this pile?")
+        movePile(pile, destination, table)
+    elif command == "endTurn()":
+        endTurn(playerArray, currentPlayer)
+    
+        
 def createPlayer(playerName):
     player = Player(playerName)
     GameStatus.playerList.append(player)
     if (len(GameStatus.playerList) == 4):
         sys.stdout.write("The game will now start")
+        #Maybe put this in a different function, something like InitializeGame()
+        GameStatus.isGameActivated = True
+        distributeCards(GameStatus.playerList, GameStatus.table.Deck)
+        sys.stdout.write("It is %s's turn" % currentPlayer.name + '\n')
+        sys.stdout.flush()
         driver()
-        
-
-
-def createDeck():
-    # Creates and shuffles 52-card deck
-    deck = []
-    for i in range(13):
-        deck.append(Card(i + 1, "H", "R"))
-        deck.append(Card(i + 1, "D", "R"))
-        deck.append(Card(i + 1, "C", "B"))
-        deck.append(Card(i + 1, "S", "B"))
-        random.shuffle(deck)
-    return deck
 
 
 def distributeCards(playerArray, deck):
@@ -85,6 +68,8 @@ def placeCard(player, card, pile, table):
     # Takes input card from current player through button action, places card in desired pile.
     # Card will be a card object containing value, suit, and location in player hand list
     # Must contain logic for alternating black/red as well as being 1 value lower than previous
+    if (GameStatus.isGameActivated == False):
+        return None
     if pile == "NW":
         if table.NW[-1].color != card.color:
             if card.value == table.NW[-1].value - 1:
@@ -216,6 +201,8 @@ def addPlayer(playerArray):
 
 
 def movePile(pile, destination, table):
+    if (GameStatus.isGameActivated == False):
+        return None
     # check if there are cards in destination pile
     if len(getattr(table, destination)) != 0:
         # check for opposite color rule
@@ -250,6 +237,9 @@ def movePile(pile, destination, table):
 
 
 def endTurn(playerArray, currentPlayer):
+    if (GameStatus.isGameActivated == False):
+        return None
+    
     index = playerArray.index(currentPlayer)
     currentPlayer.isTurn = False
     if index == 3:
@@ -272,9 +262,16 @@ app = Flask(__name__)
 @app.route('/JoinGame', methods=['POST'])
 def JoinGame():
     playerName = request.get_json()
-    sys.stdout.write('Received: ' + playerName)
+    sys.stdout.write('Received: ' + playerName + '\n')
+    sys.stdout.flush()
     createPlayer(playerName)
-    sys.stdout.write('There are now ' + str(len(GameStatus.playerList)) + ' players in the game')
+    sys.stdout.write('There are now ' + str(len(GameStatus.playerList)) + ' players in the game' + '\n')
+    sys.stdout.flush()
+    result = Serialize()
+    return result
+
+@app.route('/GetStatus', methods=['GET'])
+def GetStatus():
     result = Serialize()
     return result
 
