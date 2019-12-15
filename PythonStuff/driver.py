@@ -18,7 +18,6 @@ def driver():
     for item in currentPlayer.hand:
         currentHand = currentHand + item.string + ", "
     print("Your hand: %s" % currentHand[:-2])
-
     command = input(
         "Do you want to placeCard() , movePile() , or endTurn() ?")
     if command == "placeCard()":
@@ -42,15 +41,19 @@ def createPlayer(playerName):
     playerId = len(GameStatus.playerList)
     player = Player(playerName, playerId)
     GameStatus.playerList.append(player)
+    sys.stdout.write('There are now ' + str(len(GameStatus.playerList)) + ' players in the game' + '\n')
+    sys.stdout.flush()
     if (len(GameStatus.playerList) == 4):
-        sys.stdout.write("The game will now start")
         startGame()
         driver()
 
 def startGame():
+        sys.stdout.write("The game will now start\n")
+        sys.stdout.flush()
         GameStatus.isGameActivated = True
         GameStatus.playerList[GameStatus.currentPlayer].isTurn = True
         distributeCards(GameStatus.playerList, GameStatus.table.Deck)
+        drawCard(GameStatus.currentPlayer)
         sys.stdout.write("It is %s's turn" % GameStatus.playerList[GameStatus.currentPlayer].name + '\n')
         sys.stdout.flush()
 
@@ -222,10 +225,11 @@ def printTable(table):
     print("")
 
 
-def drawCard(player, table):
-    thisCard = table.Deck.pop()
-    player.hand.append(thisCard)
-
+def drawCard(player):
+    card = GameStatus.table.Deck.pop()
+    card.position = len(GameStatus.playerList[player].hand)
+    GameStatus.playerList[player].hand.append(card)
+    
 
 def addPlayer(playerArray):
     playerArray.append(Player(input("Enter Name: ")))
@@ -268,18 +272,19 @@ def movePile(pile, destination, table):
                     getattr(table, pile).pop(0))
 
 
-def endTurn(playerArray, currentPlayer):
+def endTurn():
     if (GameStatus.isGameActivated == False):
         return None
-    
-    index = playerArray.index(currentPlayer)
-    currentPlayer.isTurn = False
-    if index == 3:
-        newIndex = 0
-        playerArray[newIndex].isTurn = True
+    GameStatus.playerList[GameStatus.currentPlayer].isTurn = False
+    if GameStatus.currentPlayer == 3:
+        GameStatus.currentPlayer = 0
+        GameStatus.playerList[GameStatus.currentPlayer].isTurn = True
     else:
-        playerArray[index + 1].isTurn = True
-
+        GameStatus.currentPlayer += 1
+        GameStatus.playerList[GameStatus.currentPlayer].isTurn = True
+    #Draw card for next player
+    drawCard(GameStatus.currentPlayer)
+    return Serialize()
 
 def checkIfTurn(playerArray):
     for player in playerArray:
@@ -293,12 +298,12 @@ app = Flask(__name__)
 
 @app.route('/JoinGame', methods=['POST'])
 def JoinGame():
+    if (len(GameStatus.playerList) == 4):
+        return "The game is full"
     playerName = request.get_json()
     sys.stdout.write('Received: ' + playerName + '\n')
     sys.stdout.flush()
     createPlayer(playerName)
-    sys.stdout.write('There are now ' + str(len(GameStatus.playerList)) + ' players in the game' + '\n')
-    sys.stdout.flush()
     result = Serialize()
     return result
 
@@ -326,12 +331,18 @@ def PlaceCardInput():
             card = player.hand.pop(thisCard.position)
     if (cardFound == False):
         return "No card found for player " + player.name
-    
     pile = requestInput[2]
     table = GameStatus.table
     sys.stdout.write("Now moving " + player.name + "'s " + card.string + " card to " + pile + '\n')
     sys.stdout.flush()
     return placeCard(player, card, pile, table)
+
+@app.route('/EndTurn', methods=['POST'])
+def EndTurnInput():
+    requestInput = request.get_json()
+    if (GameStatus.currentPlayer != requestInput):
+        return "It is not your turn. It is player " + str(GameStatus.playerList[GameStatus.currentPlayer].playerId) + "'s turn"
+    return endTurn()
     
 
 #if python driver.py is called

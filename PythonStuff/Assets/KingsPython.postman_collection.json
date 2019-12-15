@@ -37,7 +37,99 @@
 						"JoinGame"
 					]
 				},
-				"description": "User will automatically call this when they connect to the game"
+				"description": "User will automatically call this when they connect to the game\n\nInput:\n\nstring playerName"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5000/GetStatus",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"GetStatus"
+					]
+				},
+				"description": "Gets all of the global objects from the game so that the front end can construct a view\n\nEventually we will restrict this to only the calling player to hide the other player's cards"
+			},
+			"response": []
+		},
+		{
+			"name": "Place Card",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[0, \"12S\", \"E\"]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5000/PlaceCard",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"PlaceCard"
+					]
+				},
+				"description": "Takes a card from a players hand and places it on the table\n\nInput:\n\n[int playerId, string cardString, string location]\n\nwhere playerId in [0, 1, 2, 3]\n\ncardString is \"value + suit\" (example: 12S for Queen of Spades)\n\nand location in [\"NW\", \"N\", \"NE\", \"W\", \"E\", \"SW\", \"S\", \"SE\"]"
+			},
+			"response": []
+		},
+		{
+			"name": "End Turn",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "0",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5000/EndTurn",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"EndTurn"
+					]
+				},
+				"description": "Ends the current player's turn\n\nInput:\n\nint playerId\n\nwhere playerId in [0, 1, 2, 3]"
 			},
 			"response": []
 		}
