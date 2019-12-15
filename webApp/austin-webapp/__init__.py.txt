@@ -1,0 +1,26 @@
+from flask import Flask, render_template, request
+import json
+
+app = Flask(__name__)
+
+playerArray = []
+
+@app.route('/')
+def homepage():
+        return render_template("index.html")
+if __name__ == "__main__":
+        app.run(debug=True)
+
+@app.route('/JoinGame/<user>', methods=['GET'])
+def JoinGame(user):
+        user1 = user
+        playerArray.append(user1)
+        return render_template("index.html",result = playerArray)
+@app.route('/Delete')
+def delete():
+        playerArray=[]
+        return render_template("index.html")
+
+
+
+
