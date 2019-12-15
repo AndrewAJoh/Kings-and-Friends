@@ -9,8 +9,6 @@ from gamestatus import GameStatus, Serialize
 
 def driver():
     table = GameStatus.table
-    currentPlayer = GameStatus.playerList[0]
-    currentPlayer.isTurn = True
     return None
     printTable(table)
     # While isGameActivated = true
@@ -41,16 +39,20 @@ def driver():
     
         
 def createPlayer(playerName):
-    player = Player(playerName)
+    playerId = len(GameStatus.playerList)
+    player = Player(playerName, playerId)
     GameStatus.playerList.append(player)
     if (len(GameStatus.playerList) == 4):
         sys.stdout.write("The game will now start")
-        #Maybe put this in a different function, something like InitializeGame()
-        GameStatus.isGameActivated = True
-        distributeCards(GameStatus.playerList, GameStatus.table.Deck)
-        sys.stdout.write("It is %s's turn" % currentPlayer.name + '\n')
-        sys.stdout.flush()
+        startGame()
         driver()
+
+def startGame():
+        GameStatus.isGameActivated = True
+        GameStatus.playerList[GameStatus.currentPlayer].isTurn = True
+        distributeCards(GameStatus.playerList, GameStatus.table.Deck)
+        sys.stdout.write("It is %s's turn" % GameStatus.playerList[GameStatus.currentPlayer].name + '\n')
+        sys.stdout.flush()
 
 
 def distributeCards(playerArray, deck):
@@ -63,6 +65,11 @@ def distributeCards(playerArray, deck):
             player.hand.append(thisCard)
             i += 1
 
+def updateCardPositions(playerId):
+    for i in range(len(GameStatus.playerList[playerId].hand)):
+        if (GameStatus.playerList[playerId].hand[i].position != i):
+            GameStatus.playerList[playerId].hand[i].position = i
+        
 
 def placeCard(player, card, pile, table):
     # Takes input card from current player through button action, places card in desired pile.
@@ -71,79 +78,104 @@ def placeCard(player, card, pile, table):
     if (GameStatus.isGameActivated == False):
         return None
     if pile == "NW":
-        if table.NW[-1].color != card.color:
-            if card.value == table.NW[-1].value - 1:
-                thisCard = player.hand.pop(card.position)
-                table.NW.append(thisCard)
+        if (not table.NW):
+            if (card.value != 13):
+                return "You must place a King in the corner first"
+            else:
+                table.NW.append(card)
+                updateCardPositions(player.playerId)
+        elif (table.NW[-1].color != card.color):
+            if (card.value == table.NW[-1].value - 1):
+                table.NW.append(card)
+                updateCardPositions(player.playerId)
             else:
                 print("error")
         else:
             print("error")
     elif pile == "N":
-        if table.N[-1].color != card.color:
-            if card.value == table.N[-1].value - 1:
-                thisCard = player.hand.pop(card.position)
-                table.N.append(thisCard)
+        if (table.N[-1].color != card.color):
+            if (card.value == table.N[-1].value - 1):
+                table.N.append(card)
+                updateCardPositions(player.playerId)
             else:
                 print("error")
         else:
             print("error")
     elif pile == "NE":
-        if table.NE[-1].color != card.color:
-            if card.value == table.NE[-1].value - 1:
-                thisCard = player.hand.pop(card.position)
-                table.NE.append(thisCard)
+        if (not table.NE):
+            if (card.value != 13):
+                return "You must place a King in the corner first"
+            else:
+                table.NE.append(card)
+                updateCardPositions(player.playerId)
+        elif (table.NE[-1].color != card.color):
+            if (card.value == table.NE[-1].value - 1):
+                table.NE.append(card)
+                updateCardPositions(player.playerId)
             else:
                 print("error")
         else:
             print("error")
     elif pile == "W":
-        if table.W[-1].color != card.color:
-            if card.value == table.W[-1].value - 1:
-                thisCard = player.hand.pop(card.position)
-                table.W.append(thisCard)
+        if (table.W[-1].color != card.color):
+            if (card.value == table.W[-1].value - 1):
+                table.W.append(card)
+                updateCardPositions(player.playerId)
             else:
                 print("error")
         else:
             print("error")
     elif pile == "E":
-        if table.E[-1].color != card.color:
-            if card.value == table.E[-1].value - 1:
-                thisCard = player.hand.pop(card.position)
-                table.E.append(thisCard)
+        if (table.E[-1].color != card.color):
+            if (card.value == table.E[-1].value - 1):
+                table.E.append(card)
+                updateCardPositions(player.playerId)
             else:
                 print("error")
         else:
             print("error")
     elif pile == "SW":
-        if table.SW[-1].color != card.color:
-            if card.value == table.SW[-1].value - 1:
-                thisCard = player.hand.pop(card.position)
-                table.SW.append(thisCard)
+        if (not table.SW):
+            if (card.value != 13):
+                return "You must place a King in the corner first"
+            else:
+                table.SW.append(card)
+                updateCardPositions(player.playerId)
+        elif (table.SW[-1].color != card.color):
+            if (card.value == table.SW[-1].value - 1):
+                table.SW.append(card)
+                updateCardPositions(player.playerId)
             else:
                 print("error")
         else:
             print("error")
     elif pile == "S":
-        if table.S[-1].color != card.color:
-            if card.value == table.S[-1].value - 1:
-                thisCard = player.hand.pop(card.position)
-                table.S.append(thisCard)
+        if (table.S[-1].color != card.color):
+            if (card.value == table.S[-1].value - 1):
+                table.S.append(card)
+                updateCardPositions(player.playerId)
             else:
                 print("error")
         else:
             print("error")
     elif pile == "SE":
-        if table.SE[-1].color != card.color:
-            if card.value == table.SE[-1].value - 1:
-                thisCard = player.hand.pop(card.position)
-                table.SE.append(thisCard)
+        if (not table.SE):
+            if (card.value != 13):
+                return "You must place a King in the corner first"
+            else:
+                table.SE.append(card)
+                updateCardPositions(player.playerId)
+        elif (table.SE[-1].color != card.color):
+            if (card.value == table.SE[-1].value - 1):
+                table.SE.append(card)
+                updateCardPositions(player.playerId)
             else:
                 print("error")
         else:
             print("error")
     else:
         print("error")
+    return Serialize()
 
 
 def printTable(table):
@@ -274,6 +306,33 @@ def JoinGame():
 def GetStatus():
     result = Serialize()
     return result
+
+@app.route('/PlaceCard', methods=['POST'])
+def PlaceCardInput():
+    requestInput = request.get_json()
+    if (GameStatus.currentPlayer != requestInput[0]):
+        return "It is not your turn. It is player " + str(GameStatus.playerList[GameStatus.currentPlayer].playerId) + "'s turn"
+    playerFound = False
+    for i in range(4):
+        if GameStatus.playerList[i].playerId == requestInput[0]:
+            playerFound = True
+            player = GameStatus.playerList[i]
+    if (playerFound == False):
+        return "No player found with ID " + str(requestInput[0])
+    cardFound = False
+    for thisCard in player.hand:
+        if thisCard.string == requestInput[1]:
+            cardFound = True
+            card = player.hand.pop(thisCard.position)
+    if (cardFound == False):
+        return "No card found for player " + player.name
+    
+    pile = requestInput[2]
+    table = GameStatus.table
+    sys.stdout.write("Now moving " + player.name + "'s " + card.string + " card to " + pile + '\n')
+    sys.stdout.flush()
+    return placeCard(player, card, pile, table)
+    
 
 #if python driver.py is called
 if __name__ == '__main__':
