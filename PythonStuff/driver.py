@@ -5,37 +5,7 @@ import random
 from flask import request, Flask, jsonify
 import json
 import sys
-from gamestatus import GameStatus, Serialize
-
-def driver():
-    table = GameStatus.table
-    return None
-    printTable(table)
-    # While isGameActivated = true
-    currentPlayer = checkIfTurn(playerArray)
-    drawCard(currentPlayer, table)
-    currentHand = ""
-    for item in currentPlayer.hand:
-        currentHand = currentHand + item.string + ", "
-    print("Your hand: %s" % currentHand[:-2])
-    command = input(
-        "Do you want to placeCard() , movePile() , or endTurn() ?")
-    if command == "placeCard()":
-        print("Your cards are: %s" % currentHand)
-        card = input("What card would you like to move?")
-        for thisCard in currentPlayer.hand:
-            if thisCard.string == card:
-                card = currentPlayer.hand.pop(thisCard.position)
-        pile = input(
-            "What pile would you like to place it on? (N, SW, E, etc.)")
-        placeCard(currentPlayer, card, pile, table)
-    elif command == "movePile()":
-        pile = input("What pile would you like to move?")
-        destination = input("Where would you like to place this pile?")
-        movePile(pile, destination, table)
-    elif command == "endTurn()":
-        endTurn(playerArray, currentPlayer)
-    
+from gamestatus import GameStatus, Serialize  
         
 def createPlayer(playerName):
     playerId = len(GameStatus.playerList)
@@ -45,7 +15,6 @@ def createPlayer(playerName):
     sys.stdout.flush()
     if (len(GameStatus.playerList) == 4):
         startGame()
-        driver()
 
 def startGame():
         sys.stdout.write("The game will now start\n")
@@ -78,8 +47,6 @@ def placeCard(player, card, pile, table):
     # Takes input card from current player through button action, places card in desired pile.
     # Card will be a card object containing value, suit, and location in player hand list
     # Must contain logic for alternating black/red as well as being 1 value lower than previous
-    if (GameStatus.isGameActivated == False):
-        return None
     if pile == "NW":
         if (not table.NW):
             if (card.value != 13):
@@ -178,77 +145,27 @@ def placeCard(player, card, pile, table):
             print("error")
     else:
         print("error")
-    return Serialize()
-
-
-def printTable(table):
-    nw = ""
-    n = ""
-    ne = ""
-    w = ""
-    d = ""
-    e = ""
-    sw = ""
-    s = ""
-    se = ""
-    if len(table.NW) != 0:
-        for item in table.NW:
-            nw = nw + str(item.value) + str(item.suit) + ", "
-    if len(table.N) != 0:
-        for item in table.N:
-            n = n + str(item.value) + str(item.suit) + ", "
-    if len(table.NE) != 0:
-        for item in table.NE:
-            ne = ne + str(item.value) + str(item.suit) + ", "
-    if len(table.W) != 0:
-        for item in table.W:
-            w = w + str(item.value) + str(item.suit) + ", "
-    if len(table.E) != 0:
-        for item in table.E:
-            e = e + str(item.value) + str(item.suit) + ", "
-    if len(table.SW) != 0:
-        for item in table.SW:
-            sw = sw + str(item.value) + str(item.suit) + ", "
-    if len(table.S) != 0:
-        for item in table.S:
-            s = s + str(item.value) + str(item.suit) + ", "
-    if len(table.SE) != 0:
-        for item in table.SE:
-            se = se + str(item.value) + str(item.suit) + ", "
-
-    print("|  {0}  |  {1}  |  {2}  |".format(
-        nw, n, ne))
-    print("|  {0}  |    |  {1}  |".format(
-        w, e))
-    print("|  {0}  |  {1}  |  {2}  |".format(
-        sw, s, se))
-    print("")
-
+    if (len(GameStatus.playerList[GameStatus.currentPlayer].hand == 0)):
+        return endGame(GameStatus.currentPlayer)
+    else:
+        return Serialize()
 
 def drawCard(player):
     card = GameStatus.table.Deck.pop()
     card.position = len(GameStatus.playerList[player].hand)
     GameStatus.playerList[player].hand.append(card)
-    
 
-def addPlayer(playerArray):
-    playerArray.append(Player(input("Enter Name: ")))
-    return playerArray
-
-
-def movePile(pile, destination, table):
-    if (GameStatus.isGameActivated == False):
-        return None
+def movePile(pile, destination):
     # check if there are cards in destination pile
-    if len(getattr(table, destination)) != 0:
+    if len(getattr(GameStatus.table, destination)) != 0:
         # check for opposite color rule
-        if getattr(table, destination)[-1].color != getattr(table, pile)[0].color:
+        if getattr(GameStatus.table, destination)[-1].color != getattr(GameStatus.table, pile)[0].color:
             # check for sequence rule
-            if getattr(table, pile)[0].value == getattr(table, destination)[-1].value - 1:
+            if getattr(GameStatus.table, pile)[0].value == getattr(GameStatus.table, destination)[-1].value - 1:
                 # iterate through pile loop and remove cards, placing in destination list
-                for card in getattr(table, pile):
-                    getattr(table, destination).append(
-                        getattr(table, pile).pop(card))
+                while len(getattr(GameStatus.table, pile)) > 0:
+                    getattr(GameStatus.table, destination).append(
+                        getattr(GameStatus.table, pile).pop(0))
             else:
                 print(
                     "Highest card is not one less than the last card in destination pile")
@@ -259,18 +176,18 @@ def movePile(pile, destination, table):
         # if there are no cards in destination, only kings can be put in corner
         if destination == "NW" or destination == "NE" or destination == "SW" or destination == "SE":
             # check if highest card is king
-            if getattr(table, pile)[0].value == 13:
-                while len(getattr(table, pile)) > 0:
-                    getattr(table, destination).append(
-                        getattr(table, pile).pop(0))
+            if getattr(GameStatus.table, pile)[0].value == 13:
+                while len(getattr(GameStatus.table, pile)) > 0:
+                    getattr(GameStatus.table, destination).append(
+                        getattr(GameStatus.table, pile).pop(0))
             else:
                 print("Only kings can start in the corner")
         else:
             # if not going in corner, can place any card
-            while len(getattr(table, pile)) > 0:
-                getattr(table, destination).append(
-                    getattr(table, pile).pop(0))
-
+            while len(getattr(GameStatus.table, pile)) > 0:
+                getattr(GameStatus.table, destination).append(
+                    getattr(GameStatus.table, pile).pop(0))
+    return Serialize()
 
 def endTurn():
     if (GameStatus.isGameActivated == False):
@@ -286,11 +203,10 @@ def endTurn():
     drawCard(GameStatus.currentPlayer)
     return Serialize()
 
-def checkIfTurn(playerArray):
-    for player in playerArray:
-        if player.isTurn == True:
-            currentPlayer = player
-            return currentPlayer
+def endGame(winner):
+    sys.stdout.write("The game is over. " + GameStatus.playerList[GameStatus.currentPlayer].name + " wins\n")
+    sys.stdout.flush()
+    return "You win"
 
 #WebAPI
 url = 'https://localhost:5000'
@@ -304,16 +220,16 @@ def JoinGame():
     sys.stdout.write('Received: ' + playerName + '\n')
     sys.stdout.flush()
     createPlayer(playerName)
-    result = Serialize()
-    return result
+    return Serialize()
 
 @app.route('/GetStatus', methods=['GET'])
 def GetStatus():
-    result = Serialize()
-    return result
+    return Serialize()
 
 @app.route('/PlaceCard', methods=['POST'])
 def PlaceCardInput():
+    if (GameStatus.isGameActivated == False):
+        return None
     requestInput = request.get_json()
     if (GameStatus.currentPlayer != requestInput[0]):
         return "It is not your turn. It is player " + str(GameStatus.playerList[GameStatus.currentPlayer].playerId) + "'s turn"
@@ -333,12 +249,27 @@ def PlaceCardInput():
         return "No card found for player " + player.name
     pile = requestInput[2]
     table = GameStatus.table
-    sys.stdout.write("Now moving " + player.name + "'s " + card.string + " card to " + pile + '\n')
+    sys.stdout.write("Now placing " + player.name + "'s " + card.string + " card to " + pile + '\n')
     sys.stdout.flush()
     return placeCard(player, card, pile, table)
 
+@app.route('/MovePile', methods=['POST'])
+def MovePileInput():
+    if (GameStatus.isGameActivated == False):
+        return None
+    requestInput = request.get_json()
+    if (GameStatus.currentPlayer != requestInput[0]):
+        return "It is not your turn. It is player " + str(GameStatus.playerList[GameStatus.currentPlayer].playerId) + "'s turn"
+    player = GameStatus.playerList[requestInput[0]]
+    sys.stdout.write(player.name + " is moving pile " + requestInput[1] + " to " + requestInput[2] + '\n')
+    sys.stdout.flush()
+    return movePile(requestInput[1], requestInput[2])
+    
+
 @app.route('/EndTurn', methods=['POST'])
 def EndTurnInput():
+    if (GameStatus.isGameActivated == False):
+        return None
     requestInput = request.get_json()
     if (GameStatus.currentPlayer != requestInput):
         return "It is not your turn. It is player " + str(GameStatus.playerList[GameStatus.currentPlayer].playerId) + "'s turn"
