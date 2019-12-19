@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<style>
+  body {
+    background-color: rgb(13, 40, 13)
+  }
+
+  button {
+    background-color: rgb(128, 128, 128);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  table {
+    background-color: rgb(13, 55, 13);
+    align: center top;
+    border: solid;
+  }
+
+  td {
+    align: center top;
+
+  }
+
+  th {
+    align: center top;
+
+  }
+
+  .card {
+    width: 100px;
+    height: 125px;
+    align: center;
+    valign: center;
+  }
+
+  .cardImage {
+    width: 100px;
+    height: 125px;
+  }
+
+  #rowHand1,
+  #rowHand2 {
+    padding=15px;
+    background-color: rgb(254, 217, 102);
+  }
+</style>
+
+<body>
+  <h1 style="text-align:center">King's Corner</h1>
+  <table id="bodytable" style="width:100%;padding:15px;">
+    <tr align="center" valign="top">
+      <th id="rowscoreBoard">
+        <table id="scoreBoard" style="border:solid" align="center top">
+          <tr>
+            <th>Username</th>
+            <th>Wins</th>
+            <th>Cards in Hand</th>
+            <th>Turn</th>
+          </tr>
+          <tr>
+            <td>Player1</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Player2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Player3</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Player4</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+        <form action="/JoinGame/" method="get">
+          <p>Username: </p>
+          <input type="text" name="<user>">
+          </input>
+          <p></p>
+          <button style="width:100%" height=100 type="submit">
+            Join Game
+          </button>
+        </form>
+      </th>
+      <th id="rowtable">
+        <table id="tablehandsplit" style="width:auto;">
+          <tr>
+            <td colspan="7" id="table" background="table logo.png" style="border:solid;background-size:500px;">
+              <table id="tableArray" style="border:solid; background:none;" align=center>
+                <tr id="NN">
+                  <td id="NW" class="card">
+                    <h2>NW</h2>
+                  </td>
+                  <td id="N" class="card">
+                    <h2>N</h2>
+                  </td>
+                  <td id="NE" class="card">
+                    <h2>NE</h2>
+                  </td>
+                </tr>
+                <tr id="NS">
+                  <td id="W" class="card">
+                    <h2>W</h2>
+                  </td>
+                  <td id="Deck" class="card">
+                    <h2>Deck</h2>
+                  </td>
+                  <td id="E" class="card">
+                    <h2>E</h2>
+                  </td>
+                </tr>
+                <tr id="SS">
+                  <td id="SW" class="card">
+                    <h2>SW</h2>
+                  </td>
+                  <td id="S" class="card">
+                    <h2>S</h2>
+                  </td>
+                  <td id="SE" class="card">
+                    <h2>SE</h2>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td id="hand">
+              <table id="tableHand" style="border:solid" align=center>
+                <tr id="rowHand1">
+                  <td id="card1" class="card">
+                    <img src="AS.png" class="cardImage">
+                  </td>
+                  <td id="row1card2" class="card">
+                  </td>
+                  <td id="row1card3" class="card">
+                  </td>
+                  <td id="row1card4" class="card">
+                  </td>
+                  <td id="row1card5" class="card">
+                  </td>
+                  <td id="row1card6" class="card">
+                  </td>
+                  <td id="row1card7" class="card">
+                  </td>
+                </tr>
+                <tr id="rowHand2">
+                  <td id="row2card1" class="card">
+                  </td>
+                  <td id="row2card2" class="card">
+                  </td>
+                  <td id="row2card3" class="card">
+                  </td>
+                  <td id="row2card4" class="card">
+                  </td>
+                  <td id="row2card5" class="card">
+                  </td>
+                  <td id="row2card6" class="card">
+                  </td>
+                  <td id="row2card7" class="card">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </th>
+    </tr>
+  </table>
+<script>
+var deck;
+deck = [];
+popDeck(deck);
+
+var cards = getElementsByClassName("card");
+for(var i = 0; i < cards.length; i++){
+   popCard(cards[i],deck);
+}
+
+function popDeck(deck){
+  var values;
+  values = [];
+  for (i=1;i<14;i++){
+    values.push(string(i));
+  }
+  var suits;
+  suits = ["C","S","D","H"];
+  var x;
+  var y;
+  for (x in suits){
+    for (y in values){
+      deck.push(y+x);
+    }
+  }
+  shuffle(deck);
+}
+function popCard(cardClass,deck){
+  var = card_img;
+  card_img = deck.pop();
+  cardClass.innerHTML = <img src="AS.png" align=center>;
+}
+</script>
+</body>
+
+</html>
