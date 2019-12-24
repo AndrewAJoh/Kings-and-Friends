@@ -20,7 +20,7 @@ def JoinGame(user):
 def delete():
         playerArray=[]
         return render_template("index.html")
-
-
-
-
+@app.route('/background_process_test')
+def background_process_test():
+        print "Hello"
+        return "nothing"
