@@ -2,6 +2,7 @@ import json
 from table import Table
 from card import Card
 import random
+from flask import Flask, jsonify
 
 def createDeck():
     # Creates and shuffles 52-card deck
@@ -23,14 +24,41 @@ class GameStatus:
     
 
 #Serialize will convert all global variables to json so it can be sent back
-def Serialize():
-    activeGameJSON = json.dumps(GameStatus.isGameActivated, indent=4)
-    currentPlayerJSON = json.dumps(GameStatus.currentPlayer, indent=4)
-    playerListJSON = json.dumps(GameStatus.playerList, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
-    tableValue = [GameStatus.table.NW, GameStatus.table.N, GameStatus.table.NE, GameStatus.table.W, GameStatus.table.E, GameStatus.table.SW, GameStatus.table.S, GameStatus.table.SE] 
-    tableJSON = json.dumps(tableValue, default=lambda o: str(o.value) + o.suit, indent=4)
-    tableDeckJSON = json.dumps(GameStatus.table.Deck, default=lambda o: o.string, indent=4)
-    resultJSON = activeGameJSON + currentPlayerJSON + playerListJSON + tableJSON + tableDeckJSON
+def Serialize(playerId):
+    activeGameJSON = json.dumps(GameStatus.isGameActivated)
+    activeGameDict = json.loads(activeGameJSON)
     
-    return resultJSON
+    currentPlayerJSON = json.dumps(GameStatus.currentPlayer)
+    currentPlayerDict = json.loads(currentPlayerJSON)
+    
+    playerJSON = json.dumps(GameStatus.playerList, default=lambda o: o.__dict__, sort_keys=True)
+    playerDict = json.loads(playerJSON)
+    #hide values we don't want other players to see
+    for i in range(len(GameStatus.playerList)):
+        playerDict[i]["numcards"] = len(GameStatus.playerList[i].hand)
+        del playerDict[i]["hand"]
+        del playerDict[i]["socketId"]
+
+    handJSON = json.dumps(GameStatus.playerList[playerId].hand, default=lambda o: o.__dict__, sort_keys=True)
+    handDict = json.loads(handJSON)
+    
+    tableValue = {}
+    tableValue["NW"] = GameStatus.table.NW
+    tableValue["N"] = GameStatus.table.N
+    tableValue["NE"] = GameStatus.table.NE
+    tableValue["W"] = GameStatus.table.W
+    tableValue["E"] = GameStatus.table.E
+    tableValue["SW"] = GameStatus.table.SW
+    tableValue["S"] = GameStatus.table.S
+    tableValue["SE"] = GameStatus.table.SE
+    tableJSON = json.dumps(tableValue, default=lambda o: str(o.value) + o.suit)
+    tableDict = json.loads(tableJSON)
+    
+    tableDeckJSON = json.dumps(GameStatus.table.Deck, default=lambda o: o.string)
+    tableDeckDict = json.loads(tableDeckJSON)
+    
+    dictionary = {'ActiveGame': activeGameDict, 'CurrentPlayer': currentPlayerDict, 'Player': playerDict, 'Hand': handDict, 'Table' : tableDict, 'Deck': tableDeckDict}
+
+    final = json.dumps(dictionary, indent=4)
+    
+    return final

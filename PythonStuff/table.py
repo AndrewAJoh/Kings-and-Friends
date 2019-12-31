@@ -1,11 +1,11 @@
 class Table:
     def __init__(self, deck):
         self.NW = []
-        self.N = [deck.pop()]
+        self.N = []
         self.NE = []
-        self.W = [deck.pop()]
-        self.E = [deck.pop()]
+        self.W = []
+        self.E = []
         self.SW = []
-        self.S = [deck.pop()]
+        self.S = []
         self.SE = []
         self.Deck = deck

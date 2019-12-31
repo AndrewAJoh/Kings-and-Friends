@@ -1,0 +1,377 @@
+<!doctype html>
+<html>
+<style>
+  body {
+    background-color: rgb(13, 40, 13)
+  }
+  .button {
+    background-color: rgb(128, 128, 128);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+  table {
+    background-color: rgb(13, 55, 13);
+    align: center top;
+    border: solid;
+  }
+  td {
+    align: center top;
+	text-align: center;
+  }
+  th {
+    align: center top;
+	text-align: center;
+  }
+  table, th, td{
+	border: 1px solid black;
+  }
+  .card {
+    width: 100px;
+    height: 125px;
+    align: center;
+    valign: center;
+  }
+  .cardImage {
+    width: 100px;
+    height: 125px;
+  }
+  .selector{
+    vertical-align: middle;
+	margin: 0px;
+  }
+  #rowHand1,
+  #rowHand2 {
+    padding=15px;
+    background-color: rgb(254, 217, 102);
+  }
+  .testing_area {
+	background-color: rgb(256, 256, 256);
+  }
+</style>
+
+<body>
+<div class="wrapper">
+  <h1 style="text-align:center">King's Corner</h1>
+  <table id="bodytable" style="width:100%;padding:15px;">
+    <tr align="center" valign="top">
+      <th id="rowscoreBoard">
+        <table id="scoreBoard" style="border:solid" align="center top">
+          <tr>
+            <th>Username</th>
+            <th>Wins</th>
+            <th>Cards in Hand</th>
+            <th>Turn</th>
+          </tr>
+          <tr>
+            <td id="p1name">Player1</td>
+            <td id="p1wins">0</td>
+            <td id="p1numcards"></td>
+            <td id="p1turn"></td>
+          </tr>
+          <tr>
+            <td id="p2name">Player2</td>
+            <td id="p2wins">0</td>
+            <td id="p2numcards"></td>
+            <td id="p2turn"></td>
+          </tr>
+          <tr>
+            <td id="p3name">Player3</td>
+            <td id="p3wins">0</td>
+            <td id="p3numcards"></td>
+            <td id="p3turn"></td>
+          </tr>
+          <tr>
+            <td id="p4name">Player4</td>
+            <td id="p4wins">0</td>
+            <td id="p4numcards"></td>
+            <td id="p4turn"></td>
+          </tr>
+        </table>
+        <form action="" id="join" method="POST">
+          <p>Username: </p>
+            <input type="text" class="username" placeholder="User Name"/>
+			<p>
+			<input id = "joinbutton" class="button" type="submit" style = "width:100%" height=100 value="Join Game"/>
+        </form>
+		<h2 id = "replace"> No Card Selected </h2>
+		<form action="" id="placecard" method="POST">
+			<input class = "selector" type="radio" name="placement" value="NW"/> NW
+			<input class = "selector" type="radio" name="placement" value="N"/> N
+			<input class = "selector" type="radio" name="placement" value="NE"/> NE
+			<input class = "selector" type="radio" name="placement" value="W"/> W 
+			<input class = "selector" type="radio" name="placement" value="E"/> E
+			<input class = "selector" type="radio" name="placement" value="SW"/> SW
+			<input class = "selector" type="radio" name="placement" value="S"/> S 
+			<input class = "selector" type="radio" name="placement" value="SE"/> SE
+			<input type="submit" class = "button" value="Place Card"> <p>
+		</form>
+		<form action="" id="movepile" method="POST">
+		  <select id="StartPile">
+			<option value="NW">NW</option>
+			<option value="N">N</option>
+			<option value="NE">NE</option>
+			<option value="W">W</option>
+			<option value="E">E</option>
+			<option value="SW">SW</option>
+			<option value="S">S</option>
+			<option value="SE">SE</option>
+		  </select>
+		  to 
+		  <select id="EndPile">
+		  	<option value="NW">NW</option>
+			<option value="N">N</option>
+			<option value="NE">NE</option>
+			<option value="W">W</option>
+			<option value="E">E</option>
+			<option value="SW">SW</option>
+			<option value="S">S</option>
+			<option value="SE">SE</option>
+		  </select>
+		  <br> <br>
+		  <input type="submit" class = "button" value = "Move Pile"> <p>
+		</form>
+		<form action="" id="endturn" method="POST">
+			<input id = "endturnbutton" class="button" type="submit" style = "width:100%" height=100 value="End Turn"/>
+        </form>
+      </th>
+      <th id="rowtable">
+        <table id="tablehandsplit" style="width:auto;">
+          <tr>
+            <td colspan="7" id="table" background="table logo.png" style="border:solid;background-size:500px;">
+              <table id="tableArray" style="border:solid; background:none;" align=center>
+                <tr id="NN">
+                  <td id="NW" class="card">
+                    <h2>NW</h2>
+                  </td>
+                  <td id="N" class="card">
+                    <h2>N</h2>
+                  </td>
+                  <td id="NE" class="card">
+                    <h2>NE</h2>
+                  </td>
+                </tr>
+                <tr id="NS">
+                  <td id="W" class="card">
+                    <h2>W</h2>
+                  </td>
+                  <td id="Deck" class="card">
+                    <h2>Deck</h2>
+                  </td>
+                  <td id="E" class="card">
+                    <h2>E</h2>
+                  </td>
+                </tr>
+                <tr id="SS">
+                  <td id="SW" class="card">
+                    <h2>SW</h2>
+                  </td>
+                  <td id="S" class="card">
+                    <h2>S</h2>
+                  </td>
+                  <td id="SE" class="card">
+                    <h2>SE</h2>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td id="hand">
+              <table id="tableHand" style="border:solid" align=center>
+                <tr id="rowHand1">
+                  <td id="cardspot0" class="card">
+                  </td>
+                  <td id="cardspot1" class="card">
+                  </td>
+                  <td id="cardspot2" class="card">
+                  </td>
+                  <td id="cardspot3" class="card">
+                  </td>
+                  <td id="cardspot4" class="card">
+                  </td>
+                  <td id="cardspot5" class="card">
+                  </td>
+                  <td id="cardspot6" class="card">
+                  </td>
+                </tr>
+                <tr id="rowHand2">
+                  <td id="cardspot7" class="card">
+                  </td>
+                  <td id="cardspot8" class="card">
+                  </td>
+                  <td id="cardspot9" class="card">
+                  </td>
+                  <td id="cardspot10" class="card">
+                  </td>
+                  <td id="cardspot11" class="card">
+                  </td>
+                  <td id="cardspot12" class="card">
+                  </td>
+                  <td id="cardspot13" class="card">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </th>
+    </tr>
+  </table>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script type="text/javascript">
+	var hand = [];
+    var socket = io.connect('http://localhost:5000');
+    socket.on( 'connect', function() {
+        socket.emit( 'new connection', {
+			data: 'A new user has connected'
+		} )
+    } )
+	
+	var form = $( '#join' ).on( 'submit', function( e ) {
+		e.preventDefault()
+		let user_name = $( 'input.username' ).val()
+		socket.emit( 'join game', {
+			user_name : user_name
+		} )
+	} )
+	
+	var form = $( '#placecard' ).on( 'submit', function( e ) {
+		e.preventDefault();
+		var card = document.getElementById("replace").innerHTML;
+		let pile = $( 'input.selector:checked' ).val();
+		socket.emit( 'place card', {
+			input_card : card,
+			input_pile : pile
+		} )
+	} )
+	
+	var form = $( '#movepile' ).on( 'submit', function( e ) {
+		e.preventDefault();
+		let startPile = $( '#StartPile option:selected' ).text();
+		let endPile = $( '#EndPile option:selected' ).text();
+		socket.emit( 'move pile', {
+			start_pile : startPile,
+			end_pile : endPile
+		} )
+	} )
+	
+	var form = $( '#endturn' ).on( 'submit', function( e ) {
+		e.preventDefault()
+		socket.emit( 'end turn' )
+	} )
+	
+    socket.on( 'game update', function( msg ) {
+        console.log( msg )
+        $( 'h3' ).remove()
+        $( 'p.message_holder' ).empty().append(msg)
+		var gameStatus = JSON.parse(msg);
+		if ("error" in gameStatus){
+			$( 'p.message_holder' ).empty().append(gameStatus.error);
+		}
+		else{
+			hand = gameStatus.Hand;
+			$.each(gameStatus.Player, function(i, v) {
+				document.getElementById("p"+(i+1)+"name").innerHTML = v.name;
+				var cards = v.numcards;
+				document.getElementById("p"+(i+1)+"numcards").innerHTML = cards;
+				return;
+			});
+			if (gameStatus.CurrentPlayer == 0 && gameStatus.ActiveGame == true){
+				document.getElementById("p1turn").innerHTML = "X";
+			}
+			else{
+				document.getElementById("p1turn").innerHTML = "";
+			}
+			if (gameStatus.CurrentPlayer == 1 && gameStatus.ActiveGame == true){
+				document.getElementById("p2turn").innerHTML = "X";
+			}
+			else{
+				document.getElementById("p2turn").innerHTML = "";
+			}
+			if (gameStatus.CurrentPlayer == 2 && gameStatus.ActiveGame == true){
+				document.getElementById("p3turn").innerHTML = "X";
+			}
+			else{
+				document.getElementById("p3turn").innerHTML = "";
+			}
+			if (gameStatus.CurrentPlayer == 3 && gameStatus.ActiveGame == true){
+				document.getElementById("p4turn").innerHTML = "X";
+			}
+			else{
+				document.getElementById("p4turn").innerHTML = "";
+			}
+			
+			for (x in gameStatus.Table){
+				document.getElementById(x).innerHTML = "";
+				for (i in gameStatus.Table[x]){
+					document.getElementById(x).innerHTML += '<br>' + gameStatus.Table[x][i];
+				}
+			}
+		}
+		
+		function populateHand(hand){
+			for (i=0; i < 14; i++){
+				var idString = "cardspot" + i;
+				document.getElementById(idString).innerHTML = "";
+			}
+			for (i=0; i < hand.length; i++){
+				var idString = "cardspot" + i;
+				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:givePlayerOptions(&quot;" + hand[i]["string"] + "&quot;)\" src=\"" + hand[i]["string"] + ".png\" align=center>";
+			}
+			return;
+		}
+		populateHand(hand);
+    })
+	
+	socket.on( 'game over', function( msg ) {
+		var gameResult = JSON.parse(msg);
+		var playerId = gameResult.winner;
+		var winString = document.getElementById("p" + playerId + "wins").innerHTML;
+		var wins = parseInt(winString) + 1;
+		document.getElementById("p" + playerId + "wins").innerHTML = wins;
+	} )
+	
+	function givePlayerOptions(cardString){
+		document.getElementById("replace").innerHTML = cardString;
+	}
+</script>
+<!--
+var deck;
+deck = [];
+popDeck(deck);
+var cards = getElementsByClassName("card");
+for(var i = 0; i < cards.length; i++){
+   popCard(cards[i],deck);
+}
+function popDeck(deck){
+  var values;
+  values = [];
+  for (i=1;i<14;i++){
+    values.push(string(i));
+  }
+  var suits;
+  suits = ["C","S","D","H"];
+  var x;
+  var y;
+  for (x in suits){
+    for (y in values){
+      deck.push(y+x);
+    }
+  }
+  shuffle(deck);
+}
+-->
+<pre>
+<div class="testing_area">DEBUGGING BELOW
+<p class = "message_holder"></p>
+</div>
+</pre>
+</div>
+</body>
+</html>
