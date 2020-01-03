@@ -142,7 +142,7 @@
       <th id="rowtable">
         <table id="tablehandsplit" style="width:auto;">
           <tr>
-            <td colspan="7" id="table" background="table logo.png" style="border:solid;background-size:500px;">
+            <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;">
               <table id="tableArray" style="border:solid; background:none;" align=center>
                 <tr id="NN">
                   <td id="NW" class="card">
@@ -322,7 +322,8 @@
 			}
 			for (i=0; i < hand.length; i++){
 				var idString = "cardspot" + i;
-				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:givePlayerOptions(&quot;" + hand[i]["string"] + "&quot;)\" src=\"" + hand[i]["string"] + ".png\" align=center>";
+				var picName = hand[i]["string"];
+				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:givePlayerOptions(&quot;" + hand[i]["string"] + "%quot;)\" src=\"/static/photos/" + picName + ".png\" align=center>";
 			}
 			return;
 		}
