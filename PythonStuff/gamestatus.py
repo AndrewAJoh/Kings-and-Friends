@@ -18,17 +18,23 @@ def createDeck():
 #GameStatus will have all relevant global objects we need for the lifetime of a game
 class GameStatus:
     isGameActivated = False
-    currentPlayer = 0
+    currentPlayerId = 0
+    currentPlayerIndex = 0
     playerList = []
     table = Table(createDeck())
+    gameWinners = {}
     
 
 #Serialize will convert all global variables to json so it can be sent back
-def Serialize(playerId):
+def Serialize(pid):
+    #Get index of pid in playerList
+    for i in range(len(GameStatus.playerList)):
+        if (GameStatus.playerList[i].playerId == pid):
+            playerIndex = i
     activeGameJSON = json.dumps(GameStatus.isGameActivated)
     activeGameDict = json.loads(activeGameJSON)
     
-    currentPlayerJSON = json.dumps(GameStatus.currentPlayer)
+    currentPlayerJSON = json.dumps(GameStatus.currentPlayerId)
     currentPlayerDict = json.loads(currentPlayerJSON)
     
     playerJSON = json.dumps(GameStatus.playerList, default=lambda o: o.__dict__, sort_keys=True)
@@ -39,7 +45,7 @@ def Serialize(playerId):
         del playerDict[i]["hand"]
         del playerDict[i]["socketId"]
 
-    handJSON = json.dumps(GameStatus.playerList[playerId].hand, default=lambda o: o.__dict__, sort_keys=True)
+    handJSON = json.dumps(GameStatus.playerList[playerIndex].hand, default=lambda o: o.__dict__, sort_keys=True)
     handDict = json.loads(handJSON)
     
     tableValue = {}
@@ -56,8 +62,11 @@ def Serialize(playerId):
     
     tableDeckJSON = json.dumps(GameStatus.table.Deck, default=lambda o: o.string)
     tableDeckDict = json.loads(tableDeckJSON)
+
+    gameWinnersJSON = json.dumps(GameStatus.gameWinners, default=lambda o: o.string)
+    gameWinnersDict = json.loads(gameWinnersJSON)
     
-    dictionary = {'ActiveGame': activeGameDict, 'CurrentPlayer': currentPlayerDict, 'Player': playerDict, 'Hand': handDict, 'Table' : tableDict, 'Deck': tableDeckDict}
+    dictionary = {'ActiveGame': activeGameDict, 'CurrentPlayer': currentPlayerDict, 'Player': playerDict, 'Hand': handDict, 'Table' : tableDict, 'Deck': tableDeckDict, 'Winners' : gameWinnersDict}
 
     final = json.dumps(dictionary, indent=4)
     

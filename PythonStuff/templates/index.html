@@ -98,7 +98,7 @@
 			<p>
 			<input id = "joinbutton" class="button" type="submit" style = "width:100%" height=100 value="Join Game"/>
         </form>
-		<h2 id = "replace"> No Card Selected </h2>
+		<h2 id = "replace">No Card Selected</h2>
 		<form action="" id="placecard" method="POST">
 			<input class = "selector" type="radio" name="placement" value="NW"/> NW
 			<input class = "selector" type="radio" name="placement" value="N"/> N
@@ -222,16 +222,17 @@
       </th>
     </tr>
   </table>
+  <div id="broadcast">Kings Corners</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script type="text/javascript">
 	var hand = [];
     var socket = io.connect('http://localhost:5000');
-    socket.on( 'connect', function() {
-        socket.emit( 'new connection', {
+	socket.on( 'connect', function() {
+		socket.emit( 'connection', {
 			data: 'A new user has connected'
 		} )
-    } )
+	} )
 	
 	var form = $( '#join' ).on( 'submit', function( e ) {
 		e.preventDefault()
@@ -267,21 +268,45 @@
 	} )
 	
     socket.on( 'game update', function( msg ) {
-        console.log( msg )
-        $( 'h3' ).remove()
-        $( 'p.message_holder' ).empty().append(msg)
+        console.log( msg );
+		document.getElementById("broadcast").innerHTML = "";
+        $( 'h3' ).remove();
+        $( 'p.message_holder' ).empty().append(msg);
 		var gameStatus = JSON.parse(msg);
 		if ("error" in gameStatus){
 			$( 'p.message_holder' ).empty().append(gameStatus.error);
 		}
 		else{
 			hand = gameStatus.Hand;
-			$.each(gameStatus.Player, function(i, v) {
-				document.getElementById("p"+(i+1)+"name").innerHTML = v.name;
-				var cards = v.numcards;
-				document.getElementById("p"+(i+1)+"numcards").innerHTML = cards;
-				return;
-			});
+			for (i=0; i<4; i++){
+				var playerIdFound = false;
+				var playerIdIndex = 0;
+				for (j=0; j<4; j++){
+					if (typeof gameStatus.Player[j] != "undefined"){
+						if (gameStatus.Player[j].playerId == i){
+							playerIdFound = true;
+							playerIdIndex = j;
+						}
+					}
+				}
+				if (playerIdFound == true){
+					document.getElementById("p"+(i+1)+"name").innerHTML = gameStatus.Player[playerIdIndex].name;
+					var cards = gameStatus.Player[playerIdIndex].numcards;
+					document.getElementById("p"+(i+1)+"numcards").innerHTML = cards;
+					if (gameStatus.Player[playerIdIndex].name in gameStatus.Winners){
+						document.getElementById("p" + (i+1) + "wins").innerHTML = gameStatus.Winners[gameStatus.Player[playerIdIndex].name];
+					}
+					else{
+						document.getElementById("p" + (i+1) + "wins").innerHTML = "0";
+					}
+				}
+				else{
+					document.getElementById("p"+(i+1)+"name").innerHTML = "Player" + (i+1);
+					document.getElementById("p"+(i+1)+"numcards").innerHTML = "0";
+					document.getElementById("p"+(i+1)+"wins").innerHTML = "0";
+				}
+			}	
+			
 			if (gameStatus.CurrentPlayer == 0 && gameStatus.ActiveGame == true){
 				document.getElementById("p1turn").innerHTML = "X";
 			}
@@ -323,7 +348,7 @@
 			for (i=0; i < hand.length; i++){
 				var idString = "cardspot" + i;
 				var picName = hand[i]["string"];
-				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:givePlayerOptions(&quot;" + hand[i]["string"] + "%quot;)\" src=\"/static/photos/" + picName + ".png\" align=center>";
+document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:givePlayerOptions(&quot;" + hand[i]["string"] + "&quot;)\" src=\"/static/photos/" + picName + ".png\" align=center>";
 			}
 			return;
 		}
@@ -332,10 +357,9 @@
 	
 	socket.on( 'game over', function( msg ) {
 		var gameResult = JSON.parse(msg);
-		var playerId = gameResult.winner;
-		var winString = document.getElementById("p" + playerId + "wins").innerHTML;
-		var wins = parseInt(winString) + 1;
-		document.getElementById("p" + playerId + "wins").innerHTML = wins;
+		var playerId = gameResult.winnerId;
+		var playerName = gameResult.winnerName;
+		document.getElementById("broadcast").innerHTML = "The game is over. " + playerName + " won. Click \"Join Game\" to play again.";
 	} )
 	
 	function givePlayerOptions(cardString){
