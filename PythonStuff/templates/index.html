@@ -35,6 +35,7 @@
     height: 125px;
     align: center;
     valign: center;
+	color: rgb(256, 256, 256);
   }
   .cardImage {
     width: 100px;
@@ -142,7 +143,7 @@
       <th id="rowtable">
         <table id="tablehandsplit" style="width:auto;">
           <tr>
-            <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;">
+            <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;background-position:center">
               <table id="tableArray" style="border:solid; background:none;" align=center>
                 <tr id="NN">
                   <td id="NW" class="card">
@@ -279,25 +280,23 @@
 		else{
 			hand = gameStatus.Hand;
 			for (i=0; i<4; i++){
-				var playerIdFound = false;
-				var playerIdIndex = 0;
-				for (j=0; j<4; j++){
-					if (typeof gameStatus.Player[j] != "undefined"){
-						if (gameStatus.Player[j].playerId == i){
-							playerIdFound = true;
-							playerIdIndex = j;
+				if (typeof gameStatus.Player[i] != "undefined"){
+					if (gameStatus.Player[i].inGame == true){
+						document.getElementById("p"+(i+1)+"name").innerHTML = gameStatus.Player[i].name;
+						var cards = gameStatus.Player[i].numcards;
+						document.getElementById("p"+(i+1)+"numcards").innerHTML = cards;
+					
+						if (gameStatus.Player[i].name in gameStatus.Winners){
+							document.getElementById("p" + (i+1) + "wins").innerHTML = gameStatus.Winners[gameStatus.Player[i].name];
+						}
+						else{
+							document.getElementById("p" + (i+1) + "wins").innerHTML = "0";
 						}
 					}
-				}
-				if (playerIdFound == true){
-					document.getElementById("p"+(i+1)+"name").innerHTML = gameStatus.Player[playerIdIndex].name;
-					var cards = gameStatus.Player[playerIdIndex].numcards;
-					document.getElementById("p"+(i+1)+"numcards").innerHTML = cards;
-					if (gameStatus.Player[playerIdIndex].name in gameStatus.Winners){
-						document.getElementById("p" + (i+1) + "wins").innerHTML = gameStatus.Winners[gameStatus.Player[playerIdIndex].name];
-					}
 					else{
-						document.getElementById("p" + (i+1) + "wins").innerHTML = "0";
+						document.getElementById("p"+(i+1)+"name").innerHTML = "Player" + (i+1);
+						document.getElementById("p"+(i+1)+"numcards").innerHTML = "0";
+						document.getElementById("p"+(i+1)+"wins").innerHTML = "0";
 					}
 				}
 				else{
@@ -305,6 +304,7 @@
 					document.getElementById("p"+(i+1)+"numcards").innerHTML = "0";
 					document.getElementById("p"+(i+1)+"wins").innerHTML = "0";
 				}
+				
 			}	
 			
 			if (gameStatus.CurrentPlayer == 0 && gameStatus.ActiveGame == true){

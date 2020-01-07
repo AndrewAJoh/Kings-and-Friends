@@ -4,5 +4,6 @@ class Player:
         self.name = name
         self.hand = []
         self.isTurn = False
+        self.inGame = True
         self.playerId = playerId
         self.socketId = socketId

@@ -18,23 +18,20 @@ def createDeck():
 #GameStatus will have all relevant global objects we need for the lifetime of a game
 class GameStatus:
     isGameActivated = False
-    currentPlayerId = 0
-    currentPlayerIndex = 0
+    currentPlayer = 0
+    turn = 0
     playerList = []
     table = Table(createDeck())
     gameWinners = {}
+    activePlayers = 0
     
 
 #Serialize will convert all global variables to json so it can be sent back
 def Serialize(pid):
-    #Get index of pid in playerList
-    for i in range(len(GameStatus.playerList)):
-        if (GameStatus.playerList[i].playerId == pid):
-            playerIndex = i
     activeGameJSON = json.dumps(GameStatus.isGameActivated)
     activeGameDict = json.loads(activeGameJSON)
     
-    currentPlayerJSON = json.dumps(GameStatus.currentPlayerId)
+    currentPlayerJSON = json.dumps(GameStatus.currentPlayer)
     currentPlayerDict = json.loads(currentPlayerJSON)
     
     playerJSON = json.dumps(GameStatus.playerList, default=lambda o: o.__dict__, sort_keys=True)
@@ -45,7 +42,7 @@ def Serialize(pid):
         del playerDict[i]["hand"]
         del playerDict[i]["socketId"]
 
-    handJSON = json.dumps(GameStatus.playerList[playerIndex].hand, default=lambda o: o.__dict__, sort_keys=True)
+    handJSON = json.dumps(GameStatus.playerList[pid].hand, default=lambda o: o.__dict__, sort_keys=True)
     handDict = json.loads(handJSON)
     
     tableValue = {}

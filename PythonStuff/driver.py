@@ -21,14 +21,14 @@ def startGame():
         sys.stdout.write("The game will now start\n")
         sys.stdout.flush()
         GameStatus.isGameActivated = True
-        GameStatus.playerList[GameStatus.currentPlayerIndex].isTurn = True
+        GameStatus.playerList[GameStatus.currentPlayer].isTurn = True
         GameStatus.table.N = [GameStatus.table.Deck.pop()]
         GameStatus.table.W = [GameStatus.table.Deck.pop()]
         GameStatus.table.E = [GameStatus.table.Deck.pop()]
         GameStatus.table.S = [GameStatus.table.Deck.pop()]
         distributeCards(GameStatus.playerList, GameStatus.table.Deck)
         drawCard()
-        sys.stdout.write("It is %s's turn" % GameStatus.playerList[GameStatus.currentPlayerIndex].name + '\n')
+        sys.stdout.write("It is %s's turn" % GameStatus.playerList[GameStatus.currentPlayer].name + '\n')
         sys.stdout.flush()
 
 
@@ -44,8 +44,8 @@ def distributeCards(playerArray, deck):
 
 #Update card positions for the current player
 def updateCardPositions():
-    for i in range(len(GameStatus.playerList[GameStatus.currentPlayerIndex].hand)):
-        GameStatus.playerList[GameStatus.currentPlayerIndex].hand[i].position = i
+    for i in range(len(GameStatus.playerList[GameStatus.currentPlayer].hand)):
+        GameStatus.playerList[GameStatus.currentPlayer].hand[i].position = i
         
 
 def placeCard(player, card, pile, table):
@@ -173,8 +173,8 @@ def placeCard(player, card, pile, table):
 #Draw card for the current player
 def drawCard():
     card = GameStatus.table.Deck.pop()
-    card.position = len(GameStatus.playerList[GameStatus.currentPlayerIndex].hand)
-    GameStatus.playerList[GameStatus.currentPlayerIndex].hand.append(card)
+    card.position = len(GameStatus.playerList[GameStatus.currentPlayer].hand)
+    GameStatus.playerList[GameStatus.currentPlayer].hand.append(card)
 
 def movePile(pile, destination):
     response = {}
@@ -213,28 +213,33 @@ def movePile(pile, destination):
                         getattr(GameStatus.table, pile).pop(0))
     return response
         
-def endTurn(isPlayerLeaving):
-    playerIds = []
-    for i in range(len(GameStatus.playerList)):
-        playerIds.append(GameStatus.playerList[i].playerId)
-    GameStatus.playerList[GameStatus.currentPlayerIndex].isTurn = False
-    if GameStatus.currentPlayerId == playerIds[len(playerIds)-1]:
-        GameStatus.currentPlayerId = playerIds[0]
-        GameStatus.currentPlayerIndex = 0
+def endTurn():
+    GameStatus.playerList[GameStatus.currentPlayer].isTurn = False
+    playerChosen = False
+    tries = 0
+    GameStatus.turn += 1
+    while not playerChosen and tries < 50:
+        if (GameStatus.playerList[GameStatus.turn%4].inGame == True):
+            GameStatus.currentPlayer = GameStatus.turn%4
+            GameStatus.playerList[GameStatus.currentPlayer].isTurn = True
+            playerChosen = True
+        else:
+            GameStatus.turn += 1
+            tries += 1
+        #Fail safe - in case async calls throw off the game
+    if (tries > 50):
+        for i in range(len(GameStatus.playerList)):
+            if (GameStatus.playerList[i].inGame == True):
+                response = Serialize(i)
+                socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
+                endGame()
     else:
-        GameStatus.currentPlayerIndex = playerIds.index(GameStatus.currentPlayerId)+1
-        GameStatus.currentPlayerId = playerIds[GameStatus.currentPlayerIndex]
-    if (isPlayerLeaving):
-        GameStatus.currentPlayerIndex -= 1
-        GameStatus.playerList[GameStatus.currentPlayerIndex].isTurn = True
-    else:
-        GameStatus.playerList[GameStatus.currentPlayerIndex].isTurn = True
         drawCard()
 
 def endGame():
-    sys.stdout.write("The game is over. " + GameStatus.playerList[GameStatus.currentPlayerIndex].name + " wins.\n")
+    sys.stdout.write("The game is over. " + GameStatus.playerList[GameStatus.currentPlayer].name + " wins.\n")
     sys.stdout.flush()
-    playerName = GameStatus.playerList[GameStatus.currentPlayerIndex].name
+    playerName = GameStatus.playerList[GameStatus.currentPlayer].name
     if playerName in GameStatus.gameWinners.keys():
         GameStatus.gameWinners[playerName] += 1
     else:
@@ -242,11 +247,12 @@ def endGame():
     
     #update final card layout
     for i in range(len(GameStatus.playerList)):
-        response = Serialize(GameStatus.playerList[i].playerId)
-        socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
+        if (GameStatus.playerList[i].inGame == True):
+            response = Serialize(i)
+            socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
         
     responseDict = {}
-    responseDict["winnerId"] = str(GameStatus.currentPlayerId)
+    responseDict["winnerId"] = str(GameStatus.currentPlayer)
     responseDict["winnerName"] = playerName
     
     for i in range(len(GameStatus.playerList)):
@@ -254,19 +260,21 @@ def endGame():
         socketio.emit('game over', response, room = GameStatus.playerList[i].socketId)
         
     GameStatus.isGameActivated = False
-    GameStatus.currentPlayerId = 0
-    GameStatus.currentPlayerIndex = 0
+    GameStatus.currentPlayer = 0
+    GameStatus.turn = 0
     GameStatus.playerList = []
     GameStatus.table = Table(createDeck())
+    GameStatus.activePlayers = 0
 
 def endGameFromLackOfPlayers():
     sys.stdout.write("Not enough players to continue. The game is over. \n")
     sys.stdout.flush()
     GameStatus.isGameActivated = False
-    GameStatus.currentPlayerId = 0
-    GameStatus.currentPlayerIndex = 0
+    GameStatus.currentPlayer = 0
+    GameStatus.turn = 0
     GameStatus.playerList = []
     GameStatus.table = Table(createDeck())
+    GameStatus.activePlayers = 0
 
 #WebAPI
 app = Flask(__name__)
@@ -286,7 +294,7 @@ def JoinGame(datainput, methods=['GET', 'POST']):
             socketio.emit('game update', response, room = request.sid)
         else:
             duplicateUser = False
-            for player in GameStatus.playerList:
+            for player in GameStatus.playerList: 
                 if (player.socketId == request.sid):
                     duplicateUser = True
             if (duplicateUser):
@@ -300,50 +308,40 @@ def JoinGame(datainput, methods=['GET', 'POST']):
                 socketId = request.sid
                 createPlayer(playerName, socketId)
                 for i in range(len(GameStatus.playerList)):
-                    response = Serialize(GameStatus.playerList[i].playerId)
-                    socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
+                    if (GameStatus.playerList[i].inGame == True):
+                        response = Serialize(i)
+                        socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
 
 def LeaveGame(pid):
     sys.stdout.write("Player " + str(pid) + " has left. \n")
     sys.stdout.flush()
-    #find player location in array
-    for i in range(len(GameStatus.playerList)):
-        if (GameStatus.playerList[i].playerId == pid):
-            playerLocation = i  
+    GameStatus.activePlayers -= 1
     if (GameStatus.isGameActivated == False):
         #Remove player
-        player = GameStatus.playerList[playerLocation]
+        player = GameStatus.playerList[pid]
         GameStatus.playerList.remove(player)
         #Update player IDs
         for i in range(len(GameStatus.playerList)):
             if (GameStatus.playerList[i].playerId > pid):
                 GameStatus.playerList[i].playerId -= 1
         for i in range(len(GameStatus.playerList)):
-            response = Serialize(GameStatus.playerList[i].playerId)
-            socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
+            if (GameStatus.playerList[i].inGame == True):
+                response = Serialize(i)
+                socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
     else:
         #Return their cards to the deck
-        for i in range(len(GameStatus.playerList[playerLocation].hand)):
-            GameStatus.table.Deck.append(GameStatus.playerList[playerLocation].hand.pop())
+        for i in range(len(GameStatus.playerList[pid].hand)):
+            GameStatus.table.Deck.append(GameStatus.playerList[pid].hand.pop())
+        #Remove player
+        GameStatus.playerList[pid].inGame = False
         #Check to see if it was their turn
-        flag = False
-        if (GameStatus.playerList[playerLocation].isTurn == True):
-            flag = True
-            endTurn(True)
-        #Remove player - Move this to endTurn function?
-        player = GameStatus.playerList[playerLocation]
-        GameStatus.playerList.remove(player)
-        GameStatus.currentPlayerId = GameStatus.playerList[GameStatus.currentPlayerIndex].playerId
-        #Catch this special case
-        if (flag):
-            drawCard()
-        else:
-            if (GameStatus.currentPlayerIndex >= len(GameStatus.playerList)):
-                GameStatus.currentPlayerIndex -= 1 
+        if (GameStatus.playerList[pid].isTurn == True):
+            endTurn()
         #Update all players
         for i in range(len(GameStatus.playerList)):
-            response = Serialize(GameStatus.playerList[i].playerId)
-            socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
+            if (GameStatus.playerList[i].inGame == True):
+                response = Serialize(i)
+                socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
 
 @socketio.on('place card')
 def PlaceCardInput(datainput, methods=['GET', 'POST']):
@@ -353,8 +351,8 @@ def PlaceCardInput(datainput, methods=['GET', 'POST']):
         response = json.dumps(responseDict)
         socketio.emit('game update', response, room = request.sid)
     else:
-        if (GameStatus.playerList[GameStatus.currentPlayerIndex].socketId != request.sid):
-            responseDict['error'] = "It is " + str(GameStatus.playerList[GameStatus.currentPlayerIndex].name) + "'s turn."
+        if (GameStatus.playerList[GameStatus.currentPlayer].socketId != request.sid):
+            responseDict['error'] = "It is " + str(GameStatus.playerList[GameStatus.currentPlayer].name) + "'s turn."
             response = json.dumps(responseDict)
             socketio.emit('game update', response, room = request.sid)
         else:
@@ -369,7 +367,7 @@ def PlaceCardInput(datainput, methods=['GET', 'POST']):
                     socketio.emit('game update', response, room = request.sid)
                 else:
                     pile = datainput["input_pile"]
-                    player = GameStatus.playerList[GameStatus.currentPlayerIndex]
+                    player = GameStatus.playerList[GameStatus.currentPlayer]
                     cardPosition = 0
                     for thisCard in player.hand:
                         if thisCard.string == datainput["input_card"]:
@@ -384,12 +382,13 @@ def PlaceCardInput(datainput, methods=['GET', 'POST']):
                         socketio.emit('game update', response, room = player.socketId)
                     else:
                         #check if the player won
-                        if (len(GameStatus.playerList[GameStatus.currentPlayerIndex].hand) == 0):
+                        if (len(GameStatus.playerList[GameStatus.currentPlayer].hand) == 0):
                             endGame()
                         else:
                             for i in range(len(GameStatus.playerList)):
-                                response = Serialize(GameStatus.playerList[i].playerId)
-                                socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
+                                if (GameStatus.playerList[i].inGame == True):
+                                    response = Serialize(i)
+                                    socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
             
 
 @socketio.on('move pile')
@@ -400,13 +399,13 @@ def MovePileInput(datainput, methods=['GET', 'POST']):
         response = json.dumps(responseDict)
         socketio.emit('game update', response, room = request.sid)
     else:
-        if (GameStatus.playerList[GameStatus.currentPlayerIndex].socketId != request.sid):
+        if (GameStatus.playerList[GameStatus.currentPlayer].socketId != request.sid):
             responseDict = {}
-            responseDict['error'] = "It is " + str(GameStatus.playerList[GameStatus.currentPlayerIndex].name) + "'s turn."
+            responseDict['error'] = "It is " + str(GameStatus.playerList[GameStatus.currentPlayer].name) + "'s turn."
             response = json.dumps(responseDict)
             socketio.emit('game update', response, room = request.sid)
         else:
-            player = GameStatus.playerList[GameStatus.currentPlayerIndex]
+            player = GameStatus.playerList[GameStatus.currentPlayer]
             startPile = datainput["start_pile"]
             endPile = datainput["end_pile"]
             sys.stdout.write(player.name + " is moving pile " + startPile + " to " + endPile + '\n')
@@ -417,8 +416,9 @@ def MovePileInput(datainput, methods=['GET', 'POST']):
                 socketio.emit('game update', response, room = player.socketId)
             else:
                 for i in range(len(GameStatus.playerList)):
-                    response = Serialize(GameStatus.playerList[i].playerId)
-                    socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
+                    if (GameStatus.playerList[i].inGame == True):
+                        response = Serialize(i)
+                        socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
     
 @socketio.on('end turn')
 def EndTurnInput(methods=['GET', 'POST']):
@@ -428,17 +428,17 @@ def EndTurnInput(methods=['GET', 'POST']):
         response = json.dumps(responseDict)
         socketio.emit('game update', response, room = request.sid)
     else:
-        if (request.sid != GameStatus.playerList[GameStatus.currentPlayerIndex].socketId):
+        if (request.sid != GameStatus.playerList[GameStatus.currentPlayer].socketId):
             responseDict = {}
             responseDict['error'] = "It is not your turn."
             response = json.dumps(responseDict)
             socketio.emit('game update', response, room = request.sid)
         else:
-            sys.stdout.write("PlayerId " + str(GameStatus.currentPlayerId) + " ended turn.\n")
+            sys.stdout.write("PlayerId " + str(GameStatus.currentPlayer) + " ended turn.\n")
             sys.stdout.flush()
-            endTurn(False)
+            endTurn()
             for i in range(len(GameStatus.playerList)):
-                response = Serialize(GameStatus.playerList[i].playerId)
+                response = Serialize(i)
                 socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
 
 #Called when a user connects to the web page
@@ -460,7 +460,8 @@ def RemoveConnection():
             playerId = GameStatus.playerList[i].playerId
             inGame = True
     if (inGame == True):
-        if (len(GameStatus.playerList) == 1 or len(GameStatus.playerList) == 2):
+        #Check number of active players
+        if ((GameStatus.activePlayers == 2) and (GameStatus.isGameActivated == True)):
             endGameFromLackOfPlayers()
         else:
             LeaveGame(playerId)
@@ -473,4 +474,4 @@ def sessions():
 
 #if python driver.py is called
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=80, debug=True)
+    socketio.run(app, host="0.0.0.0", port=80, debug=True)
