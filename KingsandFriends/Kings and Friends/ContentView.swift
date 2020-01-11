@@ -24,6 +24,13 @@ import UIKit
 //    }
 //}
 
+struct CardButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .background(configuration.isPressed ? Color.red : Color.clear)
+            .frame(width: 71.4, height: 100)
+    }
+}
 
 
 
@@ -46,19 +53,15 @@ struct ContentView: View {
     var x = CGFloat(560)
     var y = CGFloat(420)
     var i = 0
-
-    
     
     
     
     var body: some View {
         ZStack {
-            
             LogoImage()
                 .padding(.top, 60)
             .background(Color.init(red: 0.13, green: 0.4, blue: 0.13))
-            .edgesIgnoringSafeArea(.all)
-            
+            .edgesIgnoringSafeArea(.all)    
             NavigationView {
                     ScrollView(.horizontal) {
                         HStack() {
@@ -74,11 +77,22 @@ struct ContentView: View {
                                 }
                             }
                             }
-                        }                        }.frame(height: 100)
-                }
-            .position(x: CGFloat(200), y: CGFloat(400))
-            .frame(width: 400, height: 200)
+                        }
+                    }
+                .frame(width: 400, height: 100)
+                .background(Color.init(red: 0.13, green: 0.4, blue: 0.13))
+                .position(x: CGFloat(680), y: CGFloat(900))
+            }
             .background(Color.clear)
+            
+//            .frame(width: 400, height: 100)
+//            .position(x: CGFloat(680), y: CGFloat(900))
+
+
+
+            
+            
+            
            
             
             ZStack {
@@ -87,11 +101,14 @@ struct ContentView: View {
                 ZStack {
                     if NWimages.count > 0 {
                         if NWimages[0] != "" {
-                            Image(NWimages[0])
-                            .renderingMode(.original)
-                            .resizable()
-                            .frame(width:71.4, height:100.0)
-                            .position(x: 560, y: 430)
+                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                                Image(NWimages[0])
+                                            .renderingMode(.original)
+                                                                .resizable()
+                                                            
+                                                            }.buttonStyle(CardButtonStyle())
+                                                            .position(x:560, y:420)
+
                         }
                     }
     //                ForEach(NWimages, id: \.self) { picture in
@@ -108,11 +125,13 @@ struct ContentView: View {
                 ZStack {
                    if Nimages.count > 0 {
                         if Nimages[0] != "" {
-                            Image(String(Nimages[0]))
-                            .renderingMode(.original)
-                            .resizable()
-                            .frame(width:71.4, height:100.0)
-                            .position(x: 680, y: 430)
+                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                                Image(Nimages[0])
+                                        .renderingMode(.original)
+                                                    .resizable()
+                            }
+                        .buttonStyle(CardButtonStyle())
+                            .position(x: 680, y: 420)
                         }
                     }
                 }
@@ -121,11 +140,14 @@ struct ContentView: View {
                 ZStack {
                     if NEimages.count > 0 {
                          if NEimages[0] != "" {
-                             Image(String(NEimages[0]))
-                             .renderingMode(.original)
-                             .resizable()
-                             .frame(width:71.4, height:100.0)
-                             .position(x: 800, y: 430)
+                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                            Image(NEimages[0])
+                                        .renderingMode(.original)
+                                                            .resizable()
+ 
+                                                        }.buttonStyle(CardButtonStyle())
+                                                        .position(x:800, y:420)
+
                          }
                      }
                 }
@@ -135,11 +157,14 @@ struct ContentView: View {
                 ZStack {
                     if Wimages.count > 0 {
                          if Wimages[0] != "" {
-                             Image(String(Wimages[0]))
-                             .renderingMode(.original)
-                             .resizable()
-                             .frame(width:71.4, height:100.0)
-                             .position(x: 560, y: 590)
+                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                            Image(Wimages[0])
+                                        .renderingMode(.original)
+                                                            .resizable()
+                                                            
+                                                        }.buttonStyle(CardButtonStyle())
+                                                        .position(x:560, y:590)
+                           
                          }
                      }
                 }
@@ -154,11 +179,14 @@ struct ContentView: View {
                 ZStack {
                     if Eimages.count > 0 {
                          if Eimages[0] != "" {
-                             Image(String(Eimages[0]))
-                             .renderingMode(.original)
-                             .resizable()
-                             .frame(width:71.4, height:100.0)
-                             .position(x: 800, y: 590)
+                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                            Image(Eimages[0])
+                                        .renderingMode(.original)
+                                                            .resizable()
+                                                            
+                                                        }.buttonStyle(CardButtonStyle())
+                                                        .position(x:800, y:590)
+                        
                          }
                      }
                 }
@@ -168,11 +196,14 @@ struct ContentView: View {
                 ZStack {
                     if SWimages.count > 0 {
                          if SWimages[0] != "" {
-                             Image(String(SWimages[0]))
-                             .renderingMode(.original)
-                             .resizable()
-                             .frame(width:71.4, height:100.0)
-                             .position(x: 560, y: 750)
+                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                            Image(SWimages[0])
+                                        .renderingMode(.original)
+                                                            .resizable()
+                                                            
+                                                        }.buttonStyle(CardButtonStyle())
+                                                        .position(x:560, y:750)
+                          
                          }
                      }
                 }
@@ -182,11 +213,14 @@ struct ContentView: View {
                 ZStack {
                     if Simages.count > 0 {
                          if Simages[0] != "" {
-                             Image(String(Simages[0]))
-                             .renderingMode(.original)
-                             .resizable()
-                             .frame(width:71.4, height:100.0)
-                             .position(x: 680, y: 750)
+                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                            Image(Simages[0])
+                                        .renderingMode(.original)
+                                                            .resizable()
+                               
+                                                        }.buttonStyle(CardButtonStyle())
+                                                        .position(x:680, y:750)
+                
                          }
                      }
                 }
@@ -195,11 +229,13 @@ struct ContentView: View {
                 ZStack {
                     if SEimages.count > 0 {
                          if SEimages[0] != "" {
-                             Image(String(SEimages[0]))
-                             .renderingMode(.original)
-                             .resizable()
-                             .frame(width:71.4, height:100.0)
-                             .position(x: 800, y: 750)
+                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                            Image(SEimages[0])
+                                        .renderingMode(.original)
+                                                            .resizable()
+                                                             }.buttonStyle(CardButtonStyle())
+                                                        .position(x:800, y:750)
+                         
                          }
                      }
                 }
