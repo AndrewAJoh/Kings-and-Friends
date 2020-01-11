@@ -7,123 +7,207 @@
 //
 
 import SwiftUI
+import UIKit
+
+
+//struct GroupView: View {
+//    var body: some View {
+//        VStack(alignment: .leading) {
+//
+//            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+//                Image("6C")
+//                .renderingMode(.original)
+//                .resizable()
+//                .frame(width:71.4, height:100.0)
+//            }
+//        }
+//    }
+//}
+
+
+
 
 
 struct ContentView: View {
-    var (playerArray, deck, table, imageStrings) = driver()
-//    NW
+    var (playerArray, deck, table, NWimages, Nimages, NEimages, Wimages, Eimages, SWimages, Simages, SEimages) = driver()
+    var displacement1 = -30
+    var displacement2 = -30*2
+    var displacement3 = -30*3
+    var displacement4 = -30*4
+    var displacement5 = -30*5
+    var displacement6 = -30*6
+    var displacement7 = -30*7
+    var displacement8 = -30*8
+    var displacement9 = -30*9
+    var displacement10 = -30*10
+    var displacement11 = -30*11
+    var displacement12 = -30*12
+    var displacement13 = -30*13
+    var x = CGFloat(560)
+    var y = CGFloat(420)
+    var i = 0
 
+    
+    
+    
+    
     var body: some View {
         ZStack {
-
+            
             LogoImage()
                 .padding(.top, 60)
             .background(Color.init(red: 0.13, green: 0.4, blue: 0.13))
             .edgesIgnoringSafeArea(.all)
-            VStack {
-    //            North Piles
-                HStack {
-    //                NorthWest
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+            
+            NavigationView {
+                    ScrollView(.horizontal) {
+                        HStack() {
+                            ForEach(0 ..< playerArray[0].hand.count) { pickle in
+                                    VStack(alignment: .leading) {
 
-                        Image(imageStrings[0][0])
-                        .resizable()
-                            .frame(width:71.4, height:100.0)
-                    }
-                    Spacer()
-
-    //                North
-                    ZStack {
-                        Button(action: {}) {
-                            Image(imageStrings[1][0])
+                                Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+//                                    Image(self.playerArray[0].hand[self.i].image)
+                                    Image("6D")
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .frame(width:71.4, height:100.0)
+                                }
+                            }
+                            }
+                        }                        }.frame(height: 100)
+                }
+            .position(x: CGFloat(200), y: CGFloat(400))
+            .frame(width: 400, height: 200)
+            .background(Color.clear)
+           
+            
+            ZStack {
+            
+    //            NW Pile
+                ZStack {
+                    if NWimages.count > 0 {
+                        if NWimages[0] != "" {
+                            Image(NWimages[0])
+                            .renderingMode(.original)
                             .resizable()
-                                .frame(width:71.4, height:100.0)
-                        }
-                        Button(action: {}) {
-                            Image("6D")
-                            .resizable()
-                                .frame(width:71.4, height:100.0)
-                                .offset(y:-30)
+                            .frame(width:71.4, height:100.0)
+                            .position(x: 560, y: 430)
                         }
                     }
-                    Spacer()
-
-    //                NorthEast
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Image(imageStrings[2][0])
-                        .resizable()
+    //                ForEach(NWimages, id: \.self) { picture in
+    //                    Image(picture)
+    //                    .renderingMode(.original)
+    //                    .resizable()
+    //                    .frame(width:71.4, height:100.0)
+    //                    .position(x: 560, y: 420)
+    //                }
+                    
+                }.frame(width: 1360, height: 1180 )
+                
+    //            N Pile
+                ZStack {
+                   if Nimages.count > 0 {
+                        if Nimages[0] != "" {
+                            Image(String(Nimages[0]))
+                            .renderingMode(.original)
+                            .resizable()
                             .frame(width:71.4, height:100.0)
+                            .position(x: 680, y: 430)
+                        }
                     }
                 }
-                .frame(width: 330.0)
-
-                Spacer()
-
                 
-    //        Middle plane piles
-                HStack {
-    //                West
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Image(imageStrings[3][0])
-                            .resizable()
-                            .frame(width:71.4, height:100.0)
-                    }
-                    Spacer()
-    //                Deck
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Image("cardDeck")
-                            .resizable()
-                            .frame(width:85.68, height:120.0)
-                    }
-                    Spacer()
-    //                East
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Image(imageStrings[4][0])
-                            .resizable()
-                            .frame(width:71.4, height:100.0)
+    //            NE Pile
+                ZStack {
+                    if NEimages.count > 0 {
+                         if NEimages[0] != "" {
+                             Image(String(NEimages[0]))
+                             .renderingMode(.original)
+                             .resizable()
+                             .frame(width:71.4, height:100.0)
+                             .position(x: 800, y: 430)
+                         }
                      }
                 }
-                .frame(width: 330.0)
                 
-                Spacer()
-
-                
-    //          South Piles
-                HStack {
-    //                South West
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Image(imageStrings[5][0])
-                        .resizable()
-                            .frame(width:71.4, height:100.0)
-                    }
-                    Spacer()
-
-    //                South
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Image(imageStrings[6][0])
-                            .resizable()
-                            .frame(width:71.4, height:100.0)
-                    }
-                    Spacer()
-
-    //                South East
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Image(imageStrings[7][0])
-                            .resizable()
-                            .frame(width:71.4, height:100.0)
-                    }
+    //            Deck
+    //            West pile
+                ZStack {
+                    if Wimages.count > 0 {
+                         if Wimages[0] != "" {
+                             Image(String(Wimages[0]))
+                             .renderingMode(.original)
+                             .resizable()
+                             .frame(width:71.4, height:100.0)
+                             .position(x: 560, y: 590)
+                         }
+                     }
                 }
-                .frame(width: 330.0)
-
-            }
-            .frame(width: nil, height: 400.0)
                 
+                    Image("cardDeck")
+                        .renderingMode(.original)
+                        .resizable()
+                        .frame(width:85.68, height:120.0)
+                        .position(x: 680, y: 590)
+                
+    //            E Pile
+                ZStack {
+                    if Eimages.count > 0 {
+                         if Eimages[0] != "" {
+                             Image(String(Eimages[0]))
+                             .renderingMode(.original)
+                             .resizable()
+                             .frame(width:71.4, height:100.0)
+                             .position(x: 800, y: 590)
+                         }
+                     }
+                }
 
+                
+    //            SW Pile
+                ZStack {
+                    if SWimages.count > 0 {
+                         if SWimages[0] != "" {
+                             Image(String(SWimages[0]))
+                             .renderingMode(.original)
+                             .resizable()
+                             .frame(width:71.4, height:100.0)
+                             .position(x: 560, y: 750)
+                         }
+                     }
+                }
+                
+                
+    //            S Pile
+                ZStack {
+                    if Simages.count > 0 {
+                         if Simages[0] != "" {
+                             Image(String(Simages[0]))
+                             .renderingMode(.original)
+                             .resizable()
+                             .frame(width:71.4, height:100.0)
+                             .position(x: 680, y: 750)
+                         }
+                     }
+                }
+                
+    //            SE Pile
+                ZStack {
+                    if SEimages.count > 0 {
+                         if SEimages[0] != "" {
+                             Image(String(SEimages[0]))
+                             .renderingMode(.original)
+                             .resizable()
+                             .frame(width:71.4, height:100.0)
+                             .position(x: 800, y: 750)
+                         }
+                     }
+                }
+            }
+            
         }
-        
-
     }
-}
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
@@ -184,4 +268,6 @@ private func topMostViewController(for controller: UIViewController) -> UIViewCo
 
 func combineImages() {
     
+}
+
 }
