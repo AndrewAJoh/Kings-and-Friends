@@ -2,12 +2,12 @@
 <html>
 <style>
   body {
-    background-color: rgb(13, 40, 13)
+    background-color: white
   }
   .button {
     background-color: rgb(128, 128, 128);
     border: none;
-    color: white;
+    color: black;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
@@ -15,7 +15,7 @@
     font-size: 16px;
   }
   table {
-    background-color: rgb(13, 55, 13);
+    background-color: white;
     align: center top;
     border: solid;
   }
@@ -35,7 +35,7 @@
     height: 125px;
     align: center;
     valign: center;
-	color: rgb(256, 256, 256);
+	color: black;
   }
   .cardImage {
     width: 100px;
@@ -44,6 +44,13 @@
   .selector{
     vertical-align: middle;
 	margin: 0px;
+  }
+  #replace{
+    width: 100px;
+    height: 125px;
+    text-align: center;
+    margin: auto;
+
   }
   #rowHand1,
   #rowHand2 {
@@ -104,10 +111,10 @@
 			<input class = "selector" type="radio" name="placement" value="NW"/> NW
 			<input class = "selector" type="radio" name="placement" value="N"/> N
 			<input class = "selector" type="radio" name="placement" value="NE"/> NE
-			<input class = "selector" type="radio" name="placement" value="W"/> W 
+			<input class = "selector" type="radio" name="placement" value="W"/> W
 			<input class = "selector" type="radio" name="placement" value="E"/> E
 			<input class = "selector" type="radio" name="placement" value="SW"/> SW
-			<input class = "selector" type="radio" name="placement" value="S"/> S 
+			<input class = "selector" type="radio" name="placement" value="S"/> S
 			<input class = "selector" type="radio" name="placement" value="SE"/> SE
 			<input type="submit" class = "button" value="Place Card"> <p>
 		</form>
@@ -122,7 +129,7 @@
 			<option value="S">S</option>
 			<option value="SE">SE</option>
 		  </select>
-		  to 
+		  to
 		  <select id="EndPile">
 		  	<option value="NW">NW</option>
 			<option value="N">N</option>
@@ -234,7 +241,7 @@
 			data: 'A new user has connected'
 		} )
 	} )
-	
+
 	var form = $( '#join' ).on( 'submit', function( e ) {
 		e.preventDefault()
 		let user_name = $( 'input.username' ).val()
@@ -242,7 +249,7 @@
 			user_name : user_name
 		} )
 	} )
-	
+
 	var form = $( '#placecard' ).on( 'submit', function( e ) {
 		e.preventDefault();
 		var card = document.getElementById("replace").innerHTML;
@@ -252,7 +259,7 @@
 			input_pile : pile
 		} )
 	} )
-	
+
 	var form = $( '#movepile' ).on( 'submit', function( e ) {
 		e.preventDefault();
 		let startPile = $( '#StartPile option:selected' ).text();
@@ -262,12 +269,12 @@
 			end_pile : endPile
 		} )
 	} )
-	
+
 	var form = $( '#endturn' ).on( 'submit', function( e ) {
 		e.preventDefault()
 		socket.emit( 'end turn' )
 	} )
-	
+
     socket.on( 'game update', function( msg ) {
         console.log( msg );
 		document.getElementById("broadcast").innerHTML = "";
@@ -285,7 +292,7 @@
 						document.getElementById("p"+(i+1)+"name").innerHTML = gameStatus.Player[i].name;
 						var cards = gameStatus.Player[i].numcards;
 						document.getElementById("p"+(i+1)+"numcards").innerHTML = cards;
-					
+
 						if (gameStatus.Player[i].name in gameStatus.Winners){
 							document.getElementById("p" + (i+1) + "wins").innerHTML = gameStatus.Winners[gameStatus.Player[i].name];
 						}
@@ -304,9 +311,9 @@
 					document.getElementById("p"+(i+1)+"numcards").innerHTML = "0";
 					document.getElementById("p"+(i+1)+"wins").innerHTML = "0";
 				}
-				
-			}	
-			
+
+			}
+
 			if (gameStatus.CurrentPlayer == 0 && gameStatus.ActiveGame == true){
 				document.getElementById("p1turn").innerHTML = "X";
 			}
@@ -331,7 +338,7 @@
 			else{
 				document.getElementById("p4turn").innerHTML = "";
 			}
-			
+
 			for (x in gameStatus.Table){
 				document.getElementById(x).innerHTML = "";
 				for (i in gameStatus.Table[x]){
@@ -339,7 +346,7 @@
 				}
 			}
 		}
-		
+
 		function populateHand(hand){
 			for (i=0; i < 14; i++){
 				var idString = "cardspot" + i;
@@ -354,14 +361,14 @@ document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:g
 		}
 		populateHand(hand);
     })
-	
+
 	socket.on( 'game over', function( msg ) {
 		var gameResult = JSON.parse(msg);
 		var playerId = gameResult.winnerId;
 		var playerName = gameResult.winnerName;
 		document.getElementById("broadcast").innerHTML = "The game is over. " + playerName + " won. Click \"Join Game\" to play again.";
 	} )
-	
+
 	function givePlayerOptions(cardString){
 		document.getElementById("replace").innerHTML = cardString;
 	}
