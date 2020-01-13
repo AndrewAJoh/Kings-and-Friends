@@ -9,21 +9,6 @@
 import SwiftUI
 import UIKit
 
-
-//struct GroupView: View {
-//    var body: some View {
-//        VStack(alignment: .leading) {
-//
-//            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-//                Image("6C")
-//                .renderingMode(.original)
-//                .resizable()
-//                .frame(width:71.4, height:100.0)
-//            }
-//        }
-//    }
-//}
-
 struct CardButtonStyle: ButtonStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
@@ -31,8 +16,6 @@ struct CardButtonStyle: ButtonStyle {
             .frame(width: 71.4, height: 100)
     }
 }
-
-
 
 
 struct ContentView: View {
@@ -85,15 +68,6 @@ struct ContentView: View {
             }
             .background(Color.clear)
             
-//            .frame(width: 400, height: 100)
-//            .position(x: CGFloat(680), y: CGFloat(900))
-
-
-
-            
-            
-            
-           
             
             ZStack {
             
@@ -111,12 +85,12 @@ struct ContentView: View {
 
                         }
                     }
-    //                ForEach(NWimages, id: \.self) { picture in
-    //                    Image(picture)
-    //                    .renderingMode(.original)
-    //                    .resizable()
-    //                    .frame(width:71.4, height:100.0)
-    //                    .position(x: 560, y: 420)
+//                    ForEach(NWimages, id: \.self) { picture in
+//                        Image(picture)
+//                        .renderingMode(.original)
+//                        .resizable()
+//                        .frame(width:71.4, height:100.0)
+//                        .position(x: 560, y: 420)
     //                }
                     
                 }.frame(width: 1360, height: 1180 )
@@ -220,7 +194,6 @@ struct ContentView: View {
                                
                                                         }.buttonStyle(CardButtonStyle())
                                                         .position(x:680, y:750)
-                
                          }
                      }
                 }
@@ -297,13 +270,6 @@ private func topMostViewController(for controller: UIViewController) -> UIViewCo
         return topMostViewController(for: topController)
     }
     return controller
-}
-
-
-
-
-func combineImages() {
-    
 }
 
 }

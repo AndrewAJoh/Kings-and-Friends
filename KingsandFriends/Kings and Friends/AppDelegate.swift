@@ -12,6 +12,13 @@ import CoreData
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    func applicationDidBecomeActive(application: UIApplication) {
+        SocketIOManager.sharedInstance.establishConnection()
+    }
+    
+    func applicationDidEnterBackground(application: UIApplication) {
+        SocketIOManager.sharedInstance.closeConnection()
+    }
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
