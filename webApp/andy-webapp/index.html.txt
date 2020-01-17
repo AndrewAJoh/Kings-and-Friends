@@ -1,0 +1,27 @@
+  GNU nano 2.5.3                      File: index.html                                                  
+<!DOCTYPE html>
+<html>
+        <body>
+        <button onclick="test()"> Join Game </button>
+        <script type = "text/javascript">
+        function test(){
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "http://3.15.183.196:5000/JoinGame", true);
+                xhttp.send("PlayerName");
+                document.getElementById("testingButton").innerHTML = xhttp.responseText;
+        }
+        </script>
+        <p>current players</p>
+
+         <table border = 1>
+         {% for value in result %}
+            <tr>
+               <td> {{ value }} </td>
+            </tr>
+         {% endfor %}
+      </table>
+        <h3 id="testingButton">Replace text</h3>
+   </body>
+</html>
+
+
