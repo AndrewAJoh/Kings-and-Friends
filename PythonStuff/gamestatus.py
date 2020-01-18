@@ -24,6 +24,7 @@ class GameStatus:
     table = Table(createDeck())
     gameWinners = {}
     activePlayers = 0
+    allSockets = []
     
 
 #Serialize will convert all global variables to json so it can be sent back
