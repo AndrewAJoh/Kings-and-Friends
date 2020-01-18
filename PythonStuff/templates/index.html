@@ -1,4 +1,6 @@
-<html><head><style>
+<html><head></head><body>``
+
+<style>
   body {
     background-color: white
   }
@@ -43,13 +45,6 @@
     vertical-align: middle;
 	margin: 0px;
   }
-  #replace{
-    width: 100px;
-    height: 125px;
-    text-align: center;
-    margin: auto;
-
-  }
 
   #currentCard{
     width: 100px;
@@ -68,7 +63,7 @@
   }
 </style>
 
-</head><body>
+
 <div class="wrapper">
   <h1 style="text-align:center">King's Corner</h1>
   <table id="bodytable" style="width:100%;padding:15px; border:none;">
@@ -82,27 +77,27 @@
             <th>Turn</th>
           </tr>
           <tr>
-            <td id="p1name">d</td>
+            <td id="p1name">Player1</td>
             <td id="p1wins">0</td>
-            <td id="p1numcards">7</td>
+            <td id="p1numcards"></td>
             <td id="p1turn"></td>
           </tr>
           <tr>
-            <td id="p2name">d</td>
+            <td id="p2name">Player2</td>
             <td id="p2wins">0</td>
-            <td id="p2numcards">8</td>
-            <td id="p2turn">X</td>
+            <td id="p2numcards"></td>
+            <td id="p2turn"></td>
           </tr>
           <tr>
-            <td id="p3name">dd</td>
+            <td id="p3name">Player3</td>
             <td id="p3wins">0</td>
-            <td id="p3numcards">7</td>
+            <td id="p3numcards"></td>
             <td id="p3turn"></td>
           </tr>
           <tr>
-            <td id="p4name">ddd</td>
+            <td id="p4name">Player4</td>
             <td id="p4wins">0</td>
-            <td id="p4numcards">7</td>
+            <td id="p4numcards"></td>
             <td id="p4turn"></td>
           </tr>
         </tbody></table>
@@ -112,9 +107,11 @@
 			<p>
 			<input id="joinbutton" class="button" type="submit" style="width:100%" height="100" value="Join Game">
         </p></form>
-		<h2 id="replace">12D</h2>
+		<h2 id="replace">Noo Card Selected</h2>
+		<h5 id="currentCard"> no </h5>
+		<h4 id="selectedTableSpot"> g</h4>
+		<input type="button" onclick="placeCardNew(\'' + currentCard + ',' + selectedTableSpot + '\')">
 
-		<h4 id="selectedTableSpot">13C</h4>
 		<form action="" id="placecard" method="POST">
 			<input class="selector" type="radio" name="placement" value="NW"> NW
 			<input class="selector" type="radio" name="placement" value="N"> N
@@ -161,22 +158,38 @@
             <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;background-position:center">
               <table id="tableArray" style="border:none; background:none;" align="center">
                 <tbody><tr id="NN">
-                  <td id="NW" class="card"></td>
-                  <td id="N" class="card"><img onclick="javascript:placeCardOnClick(&quot;8S&quot;)" src="/static/photos/8S.png" align="center"></td>
-                  <td id="NE" class="card"></td>
+                  <td id="NW" class="card">
+                    <h2>NW</h2>
+                  </td>
+                  <td id="N" class="card">
+                    <h2>N</h2>
+                  </td>
+                  <td id="NE" class="card">
+                    <h2>NE</h2>
+                  </td>
                 </tr>
                 <tr id="NS">
-                  <td id="W" class="card"><img onclick="javascript:placeCardOnClick(&quot;13C&quot;)" src="/static/photos/13C.png" align="center"></td>
+                  <td id="W" class="card">
+                    <h2>W</h2>
+                  </td>
                   <td id="Deck" class="card">
                     <img src="/static/photos/cardDeck.png">
 	<!--	    <h2>Deck</h2>-->
                   </td>
-                  <td id="E" class="card"><img onclick="javascript:placeCardOnClick(&quot;2S&quot;)" src="/static/photos/2S.png" align="center"></td>
+                  <td id="E" class="card">
+                    <h2>E</h2>
+                  </td>
                 </tr>
                 <tr id="SS">
-                  <td id="SW" class="card"></td>
-                  <td id="S" class="card"><img onclick="javascript:placeCardOnClick(&quot;2H&quot;)" src="/static/photos/2H.png" align="center"></td>
-                  <td id="SE" class="card"></td>
+                  <td id="SW" class="card">
+                    <h2>SW</h2>
+                  </td>
+                  <td id="S" class="card">
+                    <h2>S</h2>
+                  </td>
+                  <td id="SE" class="card">
+                    <h2>SE</h2>
+                  </td>
                 </tr>
               </tbody></table>
             </td>
@@ -185,22 +198,36 @@
             <td id="hand">
               <table id="tableHand" style="border:none" align="center">
                 <tbody><tr id="rowHand1">
-                  <td id="cardspot0" class="card"><br> <img onclick="javascript:givePlayerOptions(&quot;8D&quot;)" src="/static/photos/8D.png" align="center"></td>
-                  <td id="cardspot1" class="card"><br> <img onclick="javascript:givePlayerOptions(&quot;6S&quot;)" src="/static/photos/6S.png" align="center"></td>
-                  <td id="cardspot2" class="card"><br> <img onclick="javascript:givePlayerOptions(&quot;1D&quot;)" src="/static/photos/1D.png" align="center"></td>
-                  <td id="cardspot3" class="card"><br> <img onclick="javascript:givePlayerOptions(&quot;3D&quot;)" src="/static/photos/3D.png" align="center"></td>
-                  <td id="cardspot4" class="card"><br> <img onclick="javascript:givePlayerOptions(&quot;8H&quot;)" src="/static/photos/8H.png" align="center"></td>
-                  <td id="cardspot5" class="card"><br> <img onclick="javascript:givePlayerOptions(&quot;5C&quot;)" src="/static/photos/5C.png" align="center"></td>
-                  <td id="cardspot6" class="card"><br> <img onclick="javascript:givePlayerOptions(&quot;5H&quot;)" src="/static/photos/5H.png" align="center"></td>
+                  <td id="cardspot0" class="card">
+                  </td>
+                  <td id="cardspot1" class="card">
+                  </td>
+                  <td id="cardspot2" class="card">
+                  </td>
+                  <td id="cardspot3" class="card">
+                  </td>
+                  <td id="cardspot4" class="card">
+                  </td>
+                  <td id="cardspot5" class="card">
+                  </td>
+                  <td id="cardspot6" class="card">
+                  </td>
                 </tr>
                 <tr id="rowHand2">
-                  <td id="cardspot7" class="card"></td>
-                  <td id="cardspot8" class="card"></td>
-                  <td id="cardspot9" class="card"></td>
-                  <td id="cardspot10" class="card"></td>
-                  <td id="cardspot11" class="card"></td>
-                  <td id="cardspot12" class="card"></td>
-                  <td id="cardspot13" class="card"></td>
+                  <td id="cardspot7" class="card">
+                  </td>
+                  <td id="cardspot8" class="card">
+                  </td>
+                  <td id="cardspot9" class="card">
+                  </td>
+                  <td id="cardspot10" class="card">
+                  </td>
+                  <td id="cardspot11" class="card">
+                  </td>
+                  <td id="cardspot12" class="card">
+                  </td>
+                  <td id="cardspot13" class="card">
+                  </td>
                 </tr>
               </tbody></table>
             </td>
@@ -209,7 +236,7 @@
       </th>
     </tr>
   </tbody></table>
-  <div id="broadcast"></div>
+  <div id="broadcast">Kings Corners</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script type="text/javascript">
@@ -360,136 +387,47 @@ document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:g
 		document.getElementById("currentCard").innerHTML = "<img src=\"/static/photos/" + cardString + ".png\" align=center>";
 	}
    	function placeCardOnClick(cardString){
-		console.log("peep " + cardString);
+		console.log("placeCardOnClick " + cardString);
 		document.getElementById("selectedTableSpot").innerHTML = cardString; //"<img src=\"/static/photos/" + "cardString" + ".png\" align=center>";
  	}
+	function placeCardNew(card,pile){
+		console.log(card);
+		console.log(pile);
+		console.log("end placenewcard");
+		socket.emit('place card', {
+			input_card : card,
+			input_pile : pile
+		 } )
+	}
 </script>
-
+<!--
+var deck;
+deck = [];
+popDeck(deck);
+var cards = getElementsByClassName("card");
+for(var i = 0; i < cards.length; i++){
+   popCard(cards[i],deck);
+}
+function popDeck(deck){
+  var values;
+  values = [];
+  for (i=1;i<14;i++){
+    values.push(string(i));
+  }
+  var suits;
+  suits = ["C","S","D","H"];
+  var x;
+  var y;
+  for (x in suits){
+    for (y in values){
+      deck.push(y+x);
+    }
+  }
+  shuffle(deck);
+}
+-->
 <pre><div class="testing_area">DEBUGGING BELOW
-<p class="message_holder">{
-    "ActiveGame": true,
-    "Deck": [
-        "11C",
-        "6C",
-        "3H",
-        "7H",
-        "13S",
-        "7C",
-        "4H",
-        "6D",
-        "12H",
-        "2D",
-        "13H",
-        "10C",
-        "11H",
-        "4C",
-        "12S",
-        "10S",
-        "5D",
-        "9H"
-    ],
-    "Hand": [
-        {
-            "color": "R",
-            "position": 0,
-            "string": "8D",
-            "value": 8,
-            "suit": "D"
-        },
-        {
-            "color": "B",
-            "position": 1,
-            "string": "6S",
-            "value": 6,
-            "suit": "S"
-        },
-        {
-            "color": "R",
-            "position": 3,
-            "string": "1D",
-            "value": 1,
-            "suit": "D"
-        },
-        {
-            "color": "R",
-            "position": 4,
-            "string": "3D",
-            "value": 3,
-            "suit": "D"
-        },
-        {
-            "color": "R",
-            "position": 5,
-            "string": "8H",
-            "value": 8,
-            "suit": "H"
-        },
-        {
-            "color": "B",
-            "position": 6,
-            "string": "5C",
-            "value": 5,
-            "suit": "C"
-        },
-        {
-            "color": "R",
-            "position": 7,
-            "string": "5H",
-            "value": 5,
-            "suit": "H"
-        }
-    ],
-    "Player": [
-        {
-            "inGame": true,
-            "name": "d",
-            "playerId": 0,
-            "isTurn": false,
-            "numcards": 7
-        },
-        {
-            "inGame": true,
-            "name": "d",
-            "playerId": 1,
-            "isTurn": true,
-            "numcards": 8
-        },
-        {
-            "inGame": true,
-            "name": "dd",
-            "playerId": 2,
-            "isTurn": false,
-            "numcards": 7
-        },
-        {
-            "inGame": true,
-            "name": "ddd",
-            "playerId": 3,
-            "isTurn": false,
-            "numcards": 7
-        }
-    ],
-    "Winners": {},
-    "Table": {
-        "E": [
-            "2S"
-        ],
-        "SW": [],
-        "NE": [],
-        "N": [
-            "8S"
-        ],
-        "S": [
-            "2H"
-        ],
-        "W": [
-            "13C"
-        ],
-        "SE": [],
-        "NW": []
-    },
-    "CurrentPlayer": 1
-}</p>
+<p class="message_holder"></p>
 </div>
 </pre>
 </div>
