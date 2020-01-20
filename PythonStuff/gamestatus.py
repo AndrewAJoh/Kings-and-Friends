@@ -24,7 +24,7 @@ class GameStatus:
     table = Table(createDeck())
     gameWinners = {}
     activePlayers = 0
-    allSockets = []
+    spectators = []
     
 
 #Serialize will convert all global variables to json so it can be sent back
@@ -68,4 +68,43 @@ def Serialize(pid):
 
     final = json.dumps(dictionary, indent=4)
     
+    return final
+
+def SerializeSpectator():
+    activeGameJSON = json.dumps(GameStatus.isGameActivated)
+    activeGameDict = json.loads(activeGameJSON)
+
+    currentPlayerJSON = json.dumps(GameStatus.currentPlayer)
+    currentPlayerDict = json.loads(currentPlayerJSON)
+
+    playerJSON = json.dumps(GameStatus.playerList, default=lambda o: o.__dict__, sort_keys=True)
+    playerDict = json.loads(playerJSON)
+    #hide values we don't want other players to see
+    for i in range(len(GameStatus.playerList)):
+        playerDict[i]["numcards"] = len(GameStatus.playerList[i].hand)
+        del playerDict[i]["hand"]
+        del playerDict[i]["socketId"]
+
+    tableValue = {}
+    tableValue["NW"] = GameStatus.table.NW
+    tableValue["N"] = GameStatus.table.N
+    tableValue["NE"] = GameStatus.table.NE
+    tableValue["W"] = GameStatus.table.W
+    tableValue["E"] = GameStatus.table.E
+    tableValue["SW"] = GameStatus.table.SW
+    tableValue["S"] = GameStatus.table.S
+    tableValue["SE"] = GameStatus.table.SE
+    tableJSON = json.dumps(tableValue, default=lambda o: str(o.value) + o.suit)
+    tableDict = json.loads(tableJSON)
+
+    tableDeckJSON = json.dumps(GameStatus.table.Deck, default=lambda o: o.string)
+    tableDeckDict = json.loads(tableDeckJSON)
+
+    gameWinnersJSON = json.dumps(GameStatus.gameWinners, default=lambda o: o.string)
+    gameWinnersDict = json.loads(gameWinnersJSON)
+
+    dictionary = {'ActiveGame': activeGameDict, 'CurrentPlayer': currentPlayerDict, 'Player': playerDict, 'Table' : tableDict, 'Deck': tableDeckDict, 'Winners' : gameWinnersDict}
+
+    final = json.dumps(dictionary, indent=4)
+
     return final

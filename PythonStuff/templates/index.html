@@ -276,15 +276,16 @@
 
     socket.on( 'game update', function( msg ) {
         console.log( msg );
-		document.getElementById("broadcast").innerHTML = "";
         $( 'h3' ).remove();
         $( 'p.message_holder' ).empty().append(msg);
 		var gameStatus = JSON.parse(msg);
+		if ("broadcast" in gameStatus){
+			document.getElementById("broadcast").innerHTML = gameStatus.broadcast;
+		}
 		if ("error" in gameStatus){
 			$( 'p.message_holder' ).empty().append(gameStatus.error);
 		}
 		else{
-			hand = gameStatus.Hand;
 			for (i=0; i<4; i++){
 				if (typeof gameStatus.Player[i] != "undefined"){
 					if (gameStatus.Player[i].inGame == true){
@@ -354,11 +355,14 @@
 			for (i=0; i < hand.length; i++){
 				var idString = "cardspot" + i;
 				var picName = hand[i]["string"];
-document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:givePlayerOptions(&quot;" + hand[i]["string"] + "&quot;)\" src=\"/static/photos/" + picName + ".png\" align=center>";
+				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:givePlayerOptions(&quot;" + hand[i]["string"] + "&quot;)\" src=\"/static/photos/" + picName + ".png\" align=center>";
 			}
 			return;
 		}
-		populateHand(hand);
+		if (typeof gameStatus.Hand != "undefined"){
+			hand = gameStatus.Hand;
+			populateHand(hand);
+		}
     })
 
 	socket.on( 'game over', function( msg ) {
@@ -373,32 +377,6 @@ document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:g
 		document.getElementById("doofus").innerHTML = "<img src=\"/static/photos/" + cardString + ".png\" align=center>";
 	}
 </script>
-<!--
-var deck;
-deck = [];
-popDeck(deck);
-var cards = getElementsByClassName("card");
-for(var i = 0; i < cards.length; i++){
-   popCard(cards[i],deck);
-}
-function popDeck(deck){
-  var values;
-  values = [];
-  for (i=1;i<14;i++){
-    values.push(string(i));
-  }
-  var suits;
-  suits = ["C","S","D","H"];
-  var x;
-  var y;
-  for (x in suits){
-    for (y in values){
-      deck.push(y+x);
-    }
-  }
-  shuffle(deck);
-}
--->
 <pre><div class="testing_area">DEBUGGING BELOW
 <p class="message_holder"></p>
 </div>

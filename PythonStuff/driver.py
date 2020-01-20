@@ -7,13 +7,28 @@ from flask_socketio import SocketIO, join_room, leave_room, send, emit
 import json
 import sys
 import re
-from gamestatus import GameStatus, Serialize, createDeck
+from gamestatus import GameStatus, Serialize, SerializeSpectator, createDeck
 
-def sendUpdateToAllActivePlayers():
+def sendUpdateToAllActivePlayers(broadcast):
     for i in range(len(GameStatus.playerList)):
         if (GameStatus.playerList[i].inGame == True):
             response = Serialize(i)
+            if (broadcast):
+                response = json.loads(response)
+                response["broadcast"] = broadcast
+                response = json.dumps(response, indent=4)
             socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
+    if (GameStatus.spectators):
+        sendUpdateToAllSpectators(broadcast)
+
+def sendUpdateToAllSpectators(broadcast):
+    for socket in GameStatus.spectators:
+        response = SerializeSpectator()
+        if (broadcast):
+            response = json.loads(response)
+            response["broadcast"] = broadcast
+            response = json.dumps(response, indent=4)
+        socketio.emit('game update', response, room = socket)
         
 def createPlayer(playerName, socketId):
     playerId = len(GameStatus.playerList)
@@ -180,9 +195,13 @@ def placeCard(player, card, pile, table):
 
 #Draw card for the current player
 def drawCard():
-    card = GameStatus.table.Deck.pop()
-    card.position = len(GameStatus.playerList[GameStatus.currentPlayer].hand)
-    GameStatus.playerList[GameStatus.currentPlayer].hand.append(card)
+    if (GameStatus.table.Deck):
+        card = GameStatus.table.Deck.pop()
+        card.position = len(GameStatus.playerList[GameStatus.currentPlayer].hand)
+        GameStatus.playerList[GameStatus.currentPlayer].hand.append(card)
+    else:
+        return
+
 
 def movePile(pile, destination):
     response = {}
@@ -236,7 +255,7 @@ def endTurn():
             tries += 1
         #Fail safe - in case async calls throw off the game
     if (tries > 50):
-        sendUpdateToAllActivePlayers()
+        sendUpdateToAllActivePlayers("An asynchronous call has caused an error in the back end.")
         endGame()
     else:
         drawCard()
@@ -251,7 +270,7 @@ def endGame():
         GameStatus.gameWinners[playerName] = 1
     
     #update final card layout
-    sendUpdateToAllActivePlayers()
+    sendUpdateToAllActivePlayers(GameStatus.playerList[GameStatus.currentPlayer].name + " won the game. Their name has been added to the hall of fame.")
         
     responseDict = {}
     responseDict["winnerId"] = str(GameStatus.currentPlayer)
@@ -281,6 +300,7 @@ def endGameFromLackOfPlayers():
 def LeaveGame(pid):
     sys.stdout.write("Player " + str(pid) + " has left. \n")
     sys.stdout.flush()
+    playerName = GameStatus.playerList[pid].name
     GameStatus.activePlayers -= 1
     if (GameStatus.isGameActivated == False):
         #Remove player
@@ -290,7 +310,7 @@ def LeaveGame(pid):
         for i in range(len(GameStatus.playerList)):
             if (GameStatus.playerList[i].playerId > pid):
                 GameStatus.playerList[i].playerId -= 1
-        sendUpdateToAllActivePlayers()
+        sendUpdateToAllActivePlayers(playerName + " has left the game.")
     else:
         #Return their cards to the deck
         for i in range(len(GameStatus.playerList[pid].hand)):
@@ -300,7 +320,7 @@ def LeaveGame(pid):
         #Check to see if it was their turn
         if (GameStatus.playerList[pid].isTurn == True):
             endTurn()
-        sendUpdateToAllActivePlayers()
+        sendUpdateToAllActivePlayers(playerName + " has left the game.")
 
 #WebAPI
 app = Flask(__name__)
@@ -343,8 +363,9 @@ def JoinGame(datainput, methods=['GET', 'POST']):
                         sys.stdout.write('Received: ' + playerName + '\n')
                         sys.stdout.flush()
                         socketId = request.sid
+                        GameStatus.spectators.remove(request.sid)
                         createPlayer(playerName, socketId)
-                        sendUpdateToAllActivePlayers()
+                        sendUpdateToAllActivePlayers(playerName + " has joined the game.")
 
 @socketio.on('place card')
 def PlaceCardInput(datainput, methods=['GET', 'POST']):
@@ -384,23 +405,30 @@ def PlaceCardInput(datainput, methods=['GET', 'POST']):
                             pile = datainput["input_pile"]
                             player = GameStatus.playerList[GameStatus.currentPlayer]
                             cardPosition = 0
+                            cardFound = False
                             for thisCard in player.hand:
                                 if thisCard.string == datainput["input_card"]:
+                                    cardFound = True
                                     cardPosition = thisCard.position
                                     card = player.hand.pop(thisCard.position)
-                            table = GameStatus.table
-                            result = placeCard(player, card, pile, table)
-                            if ("error" in result):
-                                #add card back to player hand
-                                player.hand.insert(cardPosition, card)
-                                response = json.dumps(result)
-                                socketio.emit('game update', response, room = player.socketId)
+                            if (cardFound == False):
+                                responseDict['error'] = "Invalid card."
+                                response = json.dumps(responseDict)
+                                socketio.emit('game update', response, room = request.sid)
                             else:
-                                #check if the player won
-                                if (len(GameStatus.playerList[GameStatus.currentPlayer].hand) == 0):
-                                    endGame()
+                                table = GameStatus.table
+                                result = placeCard(player, card, pile, table)
+                                if ("error" in result):
+                                    #add card back to player hand
+                                    player.hand.insert(cardPosition, card)
+                                    response = json.dumps(result)
+                                    socketio.emit('game update', response, room = player.socketId)
                                 else:
-                                    sendUpdateToAllActivePlayers()
+                                    #check if the player won
+                                    if (len(GameStatus.playerList[GameStatus.currentPlayer].hand) == 0):
+                                        endGame()
+                                    else:
+                                        sendUpdateToAllActivePlayers(GameStatus.playerList[GameStatus.currentPlayer].name + " placed " + card.string + " on pile " + pile + ".")
 
 @socketio.on('move pile')
 def MovePileInput(datainput, methods=['GET', 'POST']):
@@ -438,7 +466,7 @@ def MovePileInput(datainput, methods=['GET', 'POST']):
                         response = json.dumps(result)
                         socketio.emit('game update', response, room = player.socketId)
                     else:
-                        sendUpdateToAllActivePlayers()
+                        sendUpdateToAllActivePlayers(GameStatus.playerList[GameStatus.currentPlayer].name + " moved pile " + startPile + " to pile " + endPile + ".")
     
 @socketio.on('end turn')
 def EndTurnInput(methods=['GET']):
@@ -456,20 +484,22 @@ def EndTurnInput(methods=['GET']):
         else:
             sys.stdout.write("PlayerId " + str(GameStatus.currentPlayer) + " ended turn.\n")
             sys.stdout.flush()
+            playerName = GameStatus.playerList[GameStatus.currentPlayer].name
             endTurn()
-            sendUpdateToAllActivePlayers()
+            sendUpdateToAllActivePlayers(playerName + " ended their turn.")
 
 #Called when a user connects to the web page
 @socketio.on('connection')
 def NewConnection(datainput, methods=['GET', 'POST']):
     sys.stdout.write(datainput["data"] + '\n')
     sys.stdout.flush()
-    GameStatus.allSockets.append(request.sid)
-    responseDict = {}
+    GameStatus.spectators.append(request.sid)
+    response = SerializeSpectator()
+    responseDict = json.loads(response)
     if (GameStatus.isGameActivated == True):
-        responseDict['error'] = "Welcome. The game has already started. You can join as soon as it's over."
+        responseDict["broadcast"] = "Welcome. The game has already started. You can join as soon as it's over."
     else:
-        responseDict['error'] = "Welcome. The game has not yet started. Enter your name and join."
+        responseDict["broadcast"] = "Welcome. The game has not yet started. Enter your name and join."
     response = json.dumps(responseDict)
     socketio.emit('game update', response, room = request.sid)
 
@@ -479,7 +509,6 @@ def NewConnection(datainput, methods=['GET', 'POST']):
 def RemoveConnection():
     sys.stdout.write(request.sid + ' disconnected. \n')
     sys.stdout.flush()
-    GameStatus.allSockets.remove(request.sid)
     #check if they were a player
     inGame = False
     for i in range(len(GameStatus.playerList)):
@@ -493,6 +522,7 @@ def RemoveConnection():
         else:
             LeaveGame(playerId)
     else:
+        GameStatus.spectators.remove(request.sid)
         return
     
 @app.route('/')
