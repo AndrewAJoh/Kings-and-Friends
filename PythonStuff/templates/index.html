@@ -104,8 +104,10 @@
 			<p>
 			<input id="joinbutton" class="button" type="submit" style="width:100%" height="100" value="Join Game">
         </p></form>
-		<h2 id="replace">Noo Card Selected</h2>
-		<h3 id="doofus"> goofus </h3>
+		<h2 id="replace">No Card Selected</h2>
+		<h5 id = "currentCard"> no </h5>
+        <h4 id = "selectedTableSpot"> g</h4>
+		<input type ="button" onClick="placeCardNew()" />
 		<form action="" id="placecard" method="POST">
 			<input class="selector" type="radio" name="placement" value="NW"> NW
 			<input class="selector" type="radio" name="placement" value="N"> N
@@ -152,35 +154,35 @@
             <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;background-position:center">
               <table id="tableArray" style="border:none; background:none;" align="center">
                 <tbody><tr id="NN">
-                  <td id="NW" class="card">
+                  <td id="NW" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
                     <h2>NW</h2>
                   </td>
-                  <td id="N" class="card">
+                  <td id="N" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
                     <h2>N</h2>
                   </td>
-                  <td id="NE" class="card">
+                  <td id="NE" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
                     <h2>NE</h2>
                   </td>
                 </tr>
                 <tr id="NS">
-                  <td id="W" class="card">
+                  <td id="W" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id" >
                     <h2>W</h2>
                   </td>
-                  <td id="Deck" class="card">
+                  <td id="Deck" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
                     <h2>Deck</h2>
                   </td>
-                  <td id="E" class="card">
+                  <td id="E" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
                     <h2>E</h2>
                   </td>
                 </tr>
                 <tr id="SS">
-                  <td id="SW" class="card">
+                  <td id="SW" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
                     <h2>SW</h2>
                   </td>
-                  <td id="S" class="card">
+                  <td id="S" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
                     <h2>S</h2>
                   </td>
-                  <td id="SE" class="card">
+                  <td id="SE" class="card"onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
                     <h2>SE</h2>
                   </td>
                 </tr>
@@ -342,7 +344,11 @@
 			for (x in gameStatus.Table){
 				document.getElementById(x).innerHTML = "";
 				for (i in gameStatus.Table[x]){
-					document.getElementById(x).innerHTML += '<br>' + gameStatus.Table[x][i];
+					//document.getElementById(x).innerHTML += '<br>' + gameStatus.Table[x][i];
+					//console.log(gameStatus.Table[x][i]);
+					document.getElementById(x).innerHTML = "<img onclick=\"javascript:placeCardOnClick(&quot;" + gameStatus.Table[x][i] + "&quot;)\" src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center>";
+					console.log(document.getElementById(x).innerHTML);
+					//dont send it to givePlayerOptions send it to the place where you can say NW or N or NE  to place card
 				}
 			}
 		}
@@ -374,14 +380,24 @@
 
 	function givePlayerOptions(cardString){
 		document.getElementById("replace").innerHTML = cardString
-		document.getElementById("doofus").innerHTML = "<img src=\"/static/photos/" + cardString + ".png\" align=center>";
+		document.getElementById("currentCard").innerHTML = "<img src=\"/static/photos/" + cardString + ".png\" align=center>";
 	}
+	function placeCardNew(){
+		var card = document.getElementById("replace").innerHTML;
+		var pile = document.getElementById("selectedTableSpot").innerHTML;
+		console.log(card);
+		console.log(pile);
+		console.log("end placenewcard");
+		socket.emit('place card', {
+			input_card : card,
+			input_pile : pile
+		 } )
+	}
+	
 </script>
 <pre><div class="testing_area">DEBUGGING BELOW
 <p class="message_holder"></p>
 </div>
 </pre>
 </div>
-
-
 </body></html>
