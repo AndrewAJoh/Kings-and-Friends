@@ -29,8 +29,8 @@
 	border: 1px solid black;
   }
   .card {
-    width: 100px;
-    height: 125px;
+    width: 110px;
+    height: 135px;
     align: center;
     valign: center;
 	color: black;
@@ -105,9 +105,8 @@
 			<input id="joinbutton" class="button" type="submit" style="width:100%" height="100" value="Join Game">
         </p></form>
 		<h2 id="replace">No Card Selected</h2>
-		<h5 id = "currentCard"> no </h5>
-        <h4 id = "selectedTableSpot"> g</h4>
-		<input type ="button" onClick="placeCardNew()" />
+		<h3 id="currentCard"></h3>
+        <h4 id = "selectedTableSpot"> </h4>
 		<form action="" id="placecard" method="POST">
 			<input class="selector" type="radio" name="placement" value="NW"> NW
 			<input class="selector" type="radio" name="placement" value="N"> N
@@ -154,35 +153,35 @@
             <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;background-position:center">
               <table id="tableArray" style="border:none; background:none;" align="center">
                 <tbody><tr id="NN">
-                  <td id="NW" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
+                  <td id="NW" class="card" onclick="selectPile(this.id)">
                     <h2>NW</h2>
                   </td>
-                  <td id="N" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
+                  <td id="N" class="card" onclick="selectPile(this.id)">
                     <h2>N</h2>
                   </td>
-                  <td id="NE" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
+                  <td id="NE" class="card" onclick="selectPile(this.id)">
                     <h2>NE</h2>
                   </td>
                 </tr>
                 <tr id="NS">
-                  <td id="W" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id" >
+                  <td id="W" class="card" onclick="selectPile(this.id)" >
                     <h2>W</h2>
                   </td>
-                  <td id="Deck" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
+                  <td id="Deck" class="card">
                     <h2>Deck</h2>
                   </td>
-                  <td id="E" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
+                  <td id="E" class="card" onclick="selectPile(this.id)">
                     <h2>E</h2>
                   </td>
                 </tr>
                 <tr id="SS">
-                  <td id="SW" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
+                  <td id="SW" class="card" onclick="selectPile(this.id)">
                     <h2>SW</h2>
                   </td>
-                  <td id="S" class="card" onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
+                  <td id="S" class="card" onclick="selectPile(this.id)">
                     <h2>S</h2>
                   </td>
-                  <td id="SE" class="card"onclick="document.getElementById('selectedTableSpot').innerHTML = this.id">
+                  <td id="SE" class="card" onclick="selectPile(this.id)">
                     <h2>SE</h2>
                   </td>
                 </tr>
@@ -236,6 +235,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script type="text/javascript">
 	var hand = [];
+	var cardSelected = "";
+	var pileSelected = "";
     var socket = io.connect('http://3.15.183.196:80');
 	socket.on( 'connect', function() {
 		socket.emit( 'connection', {
@@ -278,7 +279,6 @@
 
     socket.on( 'game update', function( msg ) {
         console.log( msg );
-        $( 'h3' ).remove();
         $( 'p.message_holder' ).empty().append(msg);
 		var gameStatus = JSON.parse(msg);
 		if ("broadcast" in gameStatus){
@@ -288,6 +288,8 @@
 			$( 'p.message_holder' ).empty().append(gameStatus.error);
 		}
 		else{
+			cardSelected = "";
+			pileSelected = "";
 			for (i=0; i<4; i++){
 				if (typeof gameStatus.Player[i] != "undefined"){
 					if (gameStatus.Player[i].inGame == true){
@@ -343,10 +345,15 @@
 
 			for (x in gameStatus.Table){
 				document.getElementById(x).innerHTML = "";
-				for (i in gameStatus.Table[x]){
+				document.getElementById(x).style.background = "white";
+				for (i=0; i < gameStatus.Table[x].length; i++){
 					//document.getElementById(x).innerHTML += '<br>' + gameStatus.Table[x][i];
 					//console.log(gameStatus.Table[x][i]);
-					document.getElementById(x).innerHTML = "<img onclick=\"javascript:placeCardOnClick(&quot;" + gameStatus.Table[x][i] + "&quot;)\" src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center>";
+					if (i=0){
+						document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center>";
+					}
+					else{
+						document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center style=\"position: relative; top: 50px;\">;
 					console.log(document.getElementById(x).innerHTML);
 					//dont send it to givePlayerOptions send it to the place where you can say NW or N or NE  to place card
 				}
@@ -360,8 +367,9 @@
 			}
 			for (i=0; i < hand.length; i++){
 				var idString = "cardspot" + i;
+				document.getElementById(idString).style.background = "rgb(254, 217, 102)";
 				var picName = hand[i]["string"];
-				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:givePlayerOptions(&quot;" + hand[i]["string"] + "&quot;)\" src=\"/static/photos/" + picName + ".png\" align=center>";
+				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:selectCardFromHand(&quot;" + picName + "&quot;, &quot;" + idString + "&quot;)\" src=\"/static/photos/" + picName + ".png\" align=center>";
 			}
 			return;
 		}
@@ -378,20 +386,75 @@
 		document.getElementById("broadcast").innerHTML = "The game is over. " + playerName + " won. Click \"Join Game\" to play again.";
 	} )
 
-	function givePlayerOptions(cardString){
-		document.getElementById("replace").innerHTML = cardString
-		document.getElementById("currentCard").innerHTML = "<img src=\"/static/photos/" + cardString + ".png\" align=center>";
+	function selectCardFromHand(cardString, idString){
+		if (pileSelected != "") {
+			document.getElementById("broadcast").innerHTML = "Deselect the pile first.";
+			return;
+		}
+		if (cardSelected == cardString) {
+			cardSelected = "";
+			document.getElementById(idString).style.background = "rgb(254, 217, 102)";
+			document.getElementById("broadcast").innerHTML = cardString + " deselected.";
+			document.getElementById("replace").innerHTML = "";
+			document.getElementById("currentCard").innerHTML = "";
+			return;
+		}
+		else{ 
+			cardSelected = cardString;
+			document.getElementById(idString).style.background = "green";
+			document.getElementById("replace").innerHTML = cardString;
+			document.getElementById("currentCard").innerHTML = "<img src=\"/static/photos/" + cardString + ".png\" align=center>";
+		}
 	}
-	function placeCardNew(){
+	
+	function placeCardFromHand(pile){
 		var card = document.getElementById("replace").innerHTML;
-		var pile = document.getElementById("selectedTableSpot").innerHTML;
 		console.log(card);
 		console.log(pile);
-		console.log("end placenewcard");
 		socket.emit('place card', {
 			input_card : card,
 			input_pile : pile
 		 } )
+		 cardSelected = "";
+		 pileSelected = "";
+	}
+	
+	function selectPile(string){
+		console.log(string);
+		if (cardSelected == "" && pileSelected == ""){
+			pileSelected = string;
+			document.getElementById(string).style.background = "green";
+			document.getElementById("broadcast").innerHTML = string + " pile selected.";
+			return;
+		}
+		if (cardSelected != "" && pileSelected == ""){
+			placeCardFromHand(string);
+			return;
+		}
+		if (pileSelected != "" && cardSelected == ""){
+			if (pileSelected == string){
+				pileSelected = "";
+				document.getElementById(string).style.background = "white";
+				document.getElementById("broadcast").innerHTML = string + " pile deselected.";
+				return;
+			}
+			else{
+				placePile(string);
+			}
+			return;
+		}
+		if (cardSelected != "" && pileSelected != ""){
+			document.getElementById("broadcast").innerHTML = "Should never reach this point without cheating.";
+			return;
+		}
+	}
+	
+	function placePile(pile){
+		socket.emit( 'move pile', {
+			start_pile : pileSelected,
+			end_pile : pile
+		} )
+		pileSelected = "";
 	}
 	
 </script>
