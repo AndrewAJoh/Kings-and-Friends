@@ -349,11 +349,12 @@
 				for (i=0; i < gameStatus.Table[x].length; i++){
 					//document.getElementById(x).innerHTML += '<br>' + gameStatus.Table[x][i];
 					//console.log(gameStatus.Table[x][i]);
-					if (i=0){
+					if (i==0){
 						document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center>";
 					}
 					else{
-						document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center style=\"position: relative; top: 50px;\">;
+						document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center style=\"position: relative; top: 50px;\">";
+					}
 					console.log(document.getElementById(x).innerHTML);
 					//dont send it to givePlayerOptions send it to the place where you can say NW or N or NE  to place card
 				}
