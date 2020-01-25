@@ -32,7 +32,6 @@
     width: 110px;
     height: 135px;
     align: center;
-    valign: center;
 	color: black;
   }
   .cardImage {
@@ -153,35 +152,35 @@
             <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;background-position:center">
               <table id="tableArray" style="border:none; background:none;" align="center">
                 <tbody><tr id="NN">
-                  <td id="NW" class="card" onclick="selectPile(this.id)">
+                  <td id="NW" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
                     <h2>NW</h2>
                   </td>
-                  <td id="N" class="card" onclick="selectPile(this.id)">
+                  <td id="N" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
                     <h2>N</h2>
                   </td>
-                  <td id="NE" class="card" onclick="selectPile(this.id)">
+                  <td id="NE" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
                     <h2>NE</h2>
                   </td>
                 </tr>
                 <tr id="NS">
-                  <td id="W" class="card" onclick="selectPile(this.id)" >
+                  <td id="W" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)" >
                     <h2>W</h2>
                   </td>
-                  <td id="Deck" class="card">
+                  <td id="Deck" class="card" style="position:relative; border:solid;">
                     <h2>Deck</h2>
                   </td>
-                  <td id="E" class="card" onclick="selectPile(this.id)">
+                  <td id="E" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
                     <h2>E</h2>
                   </td>
                 </tr>
                 <tr id="SS">
-                  <td id="SW" class="card" onclick="selectPile(this.id)">
+                  <td id="SW" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
                     <h2>SW</h2>
                   </td>
-                  <td id="S" class="card" onclick="selectPile(this.id)">
+                  <td id="S" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
                     <h2>S</h2>
                   </td>
-                  <td id="SE" class="card" onclick="selectPile(this.id)">
+                  <td id="SE" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
                     <h2>SE</h2>
                   </td>
                 </tr>
@@ -192,7 +191,7 @@
             <td id="hand">
               <table id="tableHand" style="border:none" align="center">
                 <tbody><tr id="rowHand1">
-                  <td id="cardspot0" class="card">
+                  <td id="cardspot0" class="card" >
                   </td>
                   <td id="cardspot1" class="card">
                   </td>
@@ -347,17 +346,14 @@
 				document.getElementById(x).innerHTML = "";
 				document.getElementById(x).style.background = "white";
 				for (i=0; i < gameStatus.Table[x].length; i++){
-					//document.getElementById(x).innerHTML += '<br>' + gameStatus.Table[x][i];
-					//console.log(gameStatus.Table[x][i]);
-					if (i==0){
-						document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center>";
-					}
-					else{
-						document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center style=\"position: relative; top: 50px;\">";
-					}
-					console.log(document.getElementById(x).innerHTML);
-					//dont send it to givePlayerOptions send it to the place where you can say NW or N or NE  to place card
+						if (i==0){
+							document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center style=\"position:absolute; left: 11px; top: 0px; z-index: " + i + ";\">";
+                        }
+                        else{
+                            document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center style=\"position:absolute; left: 11px; top: " + i*20 + "px; z-index: " + i + ";\">";
+						}
 				}
+				document.getElementById(x).style.height = 150 + 25*(gameStatus.Table[x].length-1);
 			}
 		}
 
