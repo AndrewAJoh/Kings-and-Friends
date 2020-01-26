@@ -69,9 +69,8 @@
   <h1 style="text-align:center">King's Corner</h1>
   <table id="bodytable" style="width:100%;padding:15px; border:none;">
     <tbody><tr align="center" valign="top">
-
-      <th id="rowscoreBoard">
-        <table id="scoreBoard" style="border:solid" align="center top">
+      <td id="rowscoreBoard" style="width:20%; padding:10px;">
+        <table id="scoreBoard" style="border:solid;" align="center">
           <tbody><tr>
             <th>Username</th>
             <th>Wins</th>
@@ -103,14 +102,12 @@
             <td id="p4turn"></td>
           </tr>
     </tbody></table>
-
 		<h2 id="replace">No Card Selected</h2>
-
-      </th>
-      <th id="rowtable" style="border:none;">
-        <table id="tablehandsplit" style="width:auto; border-collapse:collapse;">
+      </td>
+      <td id="rowtable" style="border:none;">
+        <table id="tablehandsplit" style="width:100%; border-collapse:collapse;">
           <tbody><tr>
-            <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;background-position:center">
+            <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;background-position:center;">
               <table id="tableArray" style="border:none; background:none;" align="center">
                 <tbody><tr id="NN">
                   <td id="NW" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
@@ -187,9 +184,17 @@
             </td>
           </tr>
         </tbody></table>
-      </th>
-
-
+      </td>
+	   <td style="width: 20%; padding:10px;">
+		<table id="winBoard" style="border:solid;" align="center">
+          <tbody id="winBoardReference">
+			  <tr>
+				<th>Username</th>
+				<th>Wins</th>
+			  </tr>
+		  </tbody>
+		</table>
+	  </td>
     </tr>
   </tbody></table>
   <div id="broadcast">Kings Corners</div>
