@@ -47,6 +47,11 @@
     height: 125px;
     text-align: center;
     margin: auto;
+    color: white;
+
+  }
+  #info, #broadcast{
+    text-align: center;
 
   }
   #rowHand1,
@@ -64,6 +69,7 @@
   <h1 style="text-align:center">King's Corner</h1>
   <table id="bodytable" style="width:100%;padding:15px; border:none;">
     <tbody><tr align="center" valign="top">
+
       <th id="rowscoreBoard">
         <table id="scoreBoard" style="border:solid" align="center top">
           <tbody><tr>
@@ -96,55 +102,10 @@
             <td id="p4numcards"></td>
             <td id="p4turn"></td>
           </tr>
-        </tbody></table>
-        <form action="" id="join" method="POST">
-          <p>Username: </p>
-            <input type="text" class="username" placeholder="User Name">
-			<p>
-			<input id="joinbutton" class="button" type="submit" style="width:100%" height="100" value="Join Game">
-        </p></form>
+    </tbody></table>
+
 		<h2 id="replace">No Card Selected</h2>
-		<h3 id="currentCard"></h3>
-        <h4 id = "selectedTableSpot"> </h4>
-		<form action="" id="placecard" method="POST">
-			<input class="selector" type="radio" name="placement" value="NW"> NW
-			<input class="selector" type="radio" name="placement" value="N"> N
-			<input class="selector" type="radio" name="placement" value="NE"> NE
-			<input class="selector" type="radio" name="placement" value="W"> W
-			<input class="selector" type="radio" name="placement" value="E"> E
-			<input class="selector" type="radio" name="placement" value="SW"> SW
-			<input class="selector" type="radio" name="placement" value="S"> S
-			<input class="selector" type="radio" name="placement" value="SE"> SE
-			<input type="submit" class="button" value="Place Card"> <p>
-		</p></form>
-		<form action="" id="movepile" method="POST">
-		  <select id="StartPile">
-			<option value="NW">NW</option>
-			<option value="N">N</option>
-			<option value="NE">NE</option>
-			<option value="W">W</option>
-			<option value="E">E</option>
-			<option value="SW">SW</option>
-			<option value="S">S</option>
-			<option value="SE">SE</option>
-		  </select>
-		  to
-		  <select id="EndPile">
-		  	<option value="NW">NW</option>
-			<option value="N">N</option>
-			<option value="NE">NE</option>
-			<option value="W">W</option>
-			<option value="E">E</option>
-			<option value="SW">SW</option>
-			<option value="S">S</option>
-			<option value="SE">SE</option>
-		  </select>
-		  <br> <br>
-		  <input type="submit" class="button" value="Move Pile"> <p>
-		</p></form>
-		<form action="" id="endturn" method="POST">
-			<input id="endturnbutton" class="button" type="submit" style="width:100%" height="100" value="End Turn">
-        </form>
+
       </th>
       <th id="rowtable" style="border:none;">
         <table id="tablehandsplit" style="width:auto; border-collapse:collapse;">
@@ -227,9 +188,23 @@
           </tr>
         </tbody></table>
       </th>
+
+
     </tr>
   </tbody></table>
   <div id="broadcast">Kings Corners</div>
+  <div id = "info">
+    <form action="" id="join" method="POST">
+      <p>Username: </p>
+        <input type="text" class="username" placeholder="User Name">
+      <p>
+      <input id="joinbutton" class="button" type="submit" style="width:100%" height="100" value="Join Game">
+      </p>
+    </form>
+    <form action="" id="endturn" method="POST">
+      <input id="endturnbutton" class="button" type="submit" style="width:100%" height="100" value="End Turn">
+    </form>
+  </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script type="text/javascript">
@@ -361,7 +336,7 @@
 			for (i=0; i < 14; i++){
 				var idString = "cardspot" + i;
 				document.getElementById(idString).innerHTML = "";
-				document.getElementById(idString).style.background = "rgb(254, 217, 102)";
+                document.getElementById(idString).style.background = "rgb(254, 217, 102)";
 			}
 			for (i=0; i < hand.length; i++){
 				var idString = "cardspot" + i;
@@ -393,17 +368,17 @@
 			document.getElementById(idString).style.background = "rgb(254, 217, 102)";
 			document.getElementById("broadcast").innerHTML = cardString + " deselected.";
 			document.getElementById("replace").innerHTML = "";
-			document.getElementById("currentCard").innerHTML = "";
+
 			return;
 		}
-		else{ 
+		else{
 			cardSelected = cardString;
 			document.getElementById(idString).style.background = "green";
 			document.getElementById("replace").innerHTML = cardString;
-			document.getElementById("currentCard").innerHTML = "<img src=\"/static/photos/" + cardString + ".png\" align=center>";
+
 		}
 	}
-	
+
 	function placeCardFromHand(pile){
 		var card = document.getElementById("replace").innerHTML;
 		console.log(card);
@@ -415,7 +390,7 @@
 		 cardSelected = "";
 		 pileSelected = "";
 	}
-	
+
 	function selectPile(string){
 		console.log(string);
 		if (cardSelected == "" && pileSelected == ""){
@@ -445,7 +420,7 @@
 			return;
 		}
 	}
-	
+
 	function placePile(pile){
 		socket.emit( 'move pile', {
 			start_pile : pileSelected,
@@ -453,7 +428,7 @@
 		} )
 		pileSelected = "";
 	}
-	
+
 </script>
 <pre><div class="testing_area">DEBUGGING BELOW
 <p class="message_holder"></p>
