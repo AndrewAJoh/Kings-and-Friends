@@ -361,10 +361,10 @@
 			for (i=0; i < 14; i++){
 				var idString = "cardspot" + i;
 				document.getElementById(idString).innerHTML = "";
+				document.getElementById(idString).style.background = "rgb(254, 217, 102)";
 			}
 			for (i=0; i < hand.length; i++){
 				var idString = "cardspot" + i;
-				document.getElementById(idString).style.background = "rgb(254, 217, 102)";
 				var picName = hand[i]["string"];
 				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:selectCardFromHand(&quot;" + picName + "&quot;, &quot;" + idString + "&quot;)\" src=\"/static/photos/" + picName + ".png\" align=center>";
 			}
