@@ -260,6 +260,13 @@
 		}
 		if ("error" in gameStatus){
 			$( 'p.message_holder' ).empty().append(gameStatus.error);
+			for (i=0; i < 14; i++){
+				var idString = "cardspot" + i;
+				document.getElementById(idString).style.background = "rgb(254, 217, 102)";
+			}
+			cardSelected = "";
+			document.getElementById(pileSelected).style.background = "white";
+			pileSelected = "";
 		}
 		else{
 			cardSelected = "";
@@ -328,7 +335,7 @@
                             document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center style=\"position:absolute; left: 11px; top: " + i*20 + "px; z-index: " + i + ";\">";
 						}
 				}
-				document.getElementById(x).style.height = 150 + 25*(gameStatus.Table[x].length-1);
+				document.getElementById(x).style.height = 150 + 20*(gameStatus.Table[x].length-1);
 			}
 		}
 
@@ -387,8 +394,6 @@
 			input_card : card,
 			input_pile : pile
 		 } )
-		 cardSelected = "";
-		 pileSelected = "";
 	}
 
 	function selectPile(string){
@@ -426,7 +431,6 @@
 			start_pile : pileSelected,
 			end_pile : pile
 		} )
-		pileSelected = "";
 	}
 
 </script>
