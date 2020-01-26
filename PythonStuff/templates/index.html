@@ -265,7 +265,9 @@
 				document.getElementById(idString).style.background = "rgb(254, 217, 102)";
 			}
 			cardSelected = "";
-			document.getElementById(pileSelected).style.background = "white";
+			if (pileSelected != ""){
+				document.getElementById(pileSelected).style.background = "white";
+			}
 			pileSelected = "";
 		}
 		else{
@@ -329,10 +331,10 @@
 				document.getElementById(x).style.background = "white";
 				for (i=0; i < gameStatus.Table[x].length; i++){
 						if (i==0){
-							document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center style=\"position:absolute; left: 11px; top: 0px; z-index: " + i + ";\">";
+							document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" alt=\"" + gameStatus.Table[x][i] + "\" align=center style=\"position:absolute; left: 11px; top: 0px; z-index: " + i + ";\">";
                         }
                         else{
-                            document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" align=center style=\"position:absolute; left: 11px; top: " + i*20 + "px; z-index: " + i + ";\">";
+                            document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" alt=\"" + gameStatus.Table[x][i] + "\" align=center style=\"position:absolute; left: 11px; top: " + i*20 + "px; z-index: " + i + ";\">";
 						}
 				}
 				document.getElementById(x).style.height = 150 + 20*(gameStatus.Table[x].length-1);
@@ -348,7 +350,7 @@
 			for (i=0; i < hand.length; i++){
 				var idString = "cardspot" + i;
 				var picName = hand[i]["string"];
-				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:selectCardFromHand(&quot;" + picName + "&quot;, &quot;" + idString + "&quot;)\" src=\"/static/photos/" + picName + ".png\" align=center>";
+				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:selectCardFromHand(&quot;" + picName + "&quot;, &quot;" + idString + "&quot;)\" src=\"/static/photos/" + picName + ".png\" alt=\"" + picName + "\" align=center>";
 			}
 			return;
 		}

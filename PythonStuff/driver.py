@@ -18,11 +18,11 @@ def sendUpdateToAllActivePlayers(broadcast):
                 response["broadcast"] = broadcast
                 response = json.dumps(response, indent=4)
             socketio.emit('game update', response, room = GameStatus.playerList[i].socketId)
-    if (GameStatus.spectators):
-        sendUpdateToAllSpectators(broadcast)
+    if (GameStatus.spectatorSockets):
+        sendUpdateToAllspectatorSockets(broadcast)
 
-def sendUpdateToAllSpectators(broadcast):
-    for socket in GameStatus.spectators:
+def sendUpdateToAllspectatorSockets(broadcast):
+    for socket in GameStatus.spectatorSockets:
         response = SerializeSpectator()
         if (broadcast):
             response = json.loads(response)
@@ -34,6 +34,7 @@ def createPlayer(playerName, socketId):
     playerId = len(GameStatus.playerList)
     player = Player(playerName, playerId, socketId)
     GameStatus.playerList.append(player)
+    GameStatus.playerSockets.append(socketId)
     sys.stdout.write('There are now ' + str(len(GameStatus.playerList)) + ' players in the game' + '\n')
     sys.stdout.flush()
     if (len(GameStatus.playerList) == 4):
@@ -59,7 +60,7 @@ def distributeCards(playerArray, deck):
     # Distributes 7 cards to each player
     for player in playerArray:
         i = 0
-        while i < 7:
+        while i < 1:
             thisCard = deck.pop()
             thisCard.position = i
             player.hand.append(thisCard)
@@ -279,13 +280,17 @@ def endGame():
     for i in range(len(GameStatus.playerList)):
         response = json.dumps(responseDict)
         socketio.emit('game over', response, room = GameStatus.playerList[i].socketId)
-        
+
+    sys.stdout.flush()
+    while (GameStatus.playerSockets):
+        GameStatus.spectatorSockets.append(GameStatus.playerSockets.pop())
     GameStatus.isGameActivated = False
     GameStatus.currentPlayer = 0
     GameStatus.turn = 0
     GameStatus.playerList = []
     GameStatus.table = Table(createDeck())
     GameStatus.activePlayers = 0
+    sys.stdout.flush()
 
 def endGameFromLackOfPlayers():
     sys.stdout.write("Not enough players to continue. The game is over. \n")
@@ -363,7 +368,7 @@ def JoinGame(datainput, methods=['GET', 'POST']):
                         sys.stdout.write('Received: ' + playerName + '\n')
                         sys.stdout.flush()
                         socketId = request.sid
-                        GameStatus.spectators.remove(request.sid)
+                        GameStatus.spectatorSockets.remove(request.sid)
                         createPlayer(playerName, socketId)
                         sendUpdateToAllActivePlayers(playerName + " has joined the game.")
 
@@ -493,7 +498,7 @@ def EndTurnInput(methods=['GET']):
 def NewConnection(datainput, methods=['GET', 'POST']):
     sys.stdout.write(datainput["data"] + '\n')
     sys.stdout.flush()
-    GameStatus.spectators.append(request.sid)
+    GameStatus.spectatorSockets.append(request.sid)
     response = SerializeSpectator()
     responseDict = json.loads(response)
     if (GameStatus.isGameActivated == True):
@@ -522,7 +527,7 @@ def RemoveConnection():
         else:
             LeaveGame(playerId)
     else:
-        GameStatus.spectators.remove(request.sid)
+        GameStatus.spectatorSockets.remove(request.sid)
         return
     
 @app.route('/')
