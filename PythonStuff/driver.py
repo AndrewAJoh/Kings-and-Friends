@@ -276,6 +276,7 @@ def endGame():
     responseDict = {}
     responseDict["winnerId"] = str(GameStatus.currentPlayer)
     responseDict["winnerName"] = playerName
+    responseDict["winnerList"] = GameStatus.gameWinners
     
     for i in range(len(GameStatus.playerList)):
         response = json.dumps(responseDict)

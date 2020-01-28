@@ -187,7 +187,7 @@
       </td>
 	   <td style="width: 20%; padding:10px;">
 		<table id="winBoard" style="border:solid;" align="center">
-          <tbody id="winBoardReference">
+          <tbody id="winners">
 			  <tr>
 				<th>Username</th>
 				<th>Wins</th>
@@ -346,6 +346,14 @@
 			}
 		}
 
+		var winnerArray = sortWinners(gameStatus.Winners);
+		document.getElementById("winners").innerHTML = "<tr> <th>Username</th> <th>Wins</th> </tr>";
+		for (i=0; i < 20; i++){
+			if (typeof(winnerArray[i]) != "undefined"){
+				document.getElementById("winners").innerHTML += "<tr> <td> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+			}
+		}
+		
 		function populateHand(hand){
 			for (i=0; i < 14; i++){
 				var idString = "cardspot" + i;
@@ -369,8 +377,26 @@
 		var gameResult = JSON.parse(msg);
 		var playerId = gameResult.winnerId;
 		var playerName = gameResult.winnerName;
+		var winnerList = gameResult.winnerList;
 		document.getElementById("broadcast").innerHTML = "The game is over. " + playerName + " won. Click \"Join Game\" to play again.";
+		winnerArray = sortWinners(winnerList);
+		document.getElementById("winners").innerHTML = "<tr> <th>Username</th> <th>Wins</th> </tr>";
+		for (i=0; i < 30; i++){
+			if (typeof(winnerArray[i]) != "undefined"){
+				document.getElementById("winners").innerHTML += "<tr> <td> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+			}
+		}
 	} )
+	
+	function sortWinners(winnerList){
+		var items = Object.keys(winnerList).map(function(key) {
+			return [key, winnerList[key]];
+		});
+		items.sort(function(first, second) {
+			return second[1] - first[1];
+		});
+		return items;
+	}
 
 	function selectCardFromHand(cardString, idString){
 		if (pileSelected != "") {
