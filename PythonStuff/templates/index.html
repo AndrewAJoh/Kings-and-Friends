@@ -1,6 +1,6 @@
 <html><head><style>
   body {
-    background-color: white
+    background-color: rgb(13, 80, 13);
   }
   .button {
     background-color: rgb(128, 128, 128);
@@ -42,6 +42,10 @@
     vertical-align: middle;
 	margin: 0px;
   }
+  #error{
+	width: 100%;
+	color: red;
+  }
   #replace{
     width: 100px;
     height: 125px;
@@ -66,7 +70,7 @@
 
 </head><body>
 <div class="wrapper">
-  <h1 style="text-align:center">King's Corner</h1>
+  <h1 style="text-align:center">Kings and Friends</h1>
   <table id="bodytable" style="width:100%;padding:15px; border:none;">
     <tbody><tr align="center" valign="top">
       <td id="rowscoreBoard" style="width:20%; padding:10px;">
@@ -103,6 +107,9 @@
           </tr>
     </tbody></table>
 		<h2 id="replace">No Card Selected</h2>
+		<p id="broadcast"></p>
+		<div style="height: 100px"> </div>
+		<p id="error"></p>
       </td>
       <td id="rowtable" style="border:none;">
         <table id="tablehandsplit" style="width:100%; border-collapse:collapse;">
@@ -197,7 +204,6 @@
 	  </td>
     </tr>
   </tbody></table>
-  <div id="broadcast">Kings Corners</div>
   <div id = "info">
     <form action="" id="join" method="POST">
       <p>Username: </p>
@@ -258,13 +264,12 @@
 
     socket.on( 'game update', function( msg ) {
         console.log( msg );
-        $( 'p.message_holder' ).empty().append(msg);
 		var gameStatus = JSON.parse(msg);
 		if ("broadcast" in gameStatus){
-			document.getElementById("broadcast").innerHTML = gameStatus.broadcast;
+			document.getElementById("broadcast").innerText = gameStatus.broadcast;
 		}
 		if ("error" in gameStatus){
-			$( 'p.message_holder' ).empty().append(gameStatus.error);
+			document.getElementById("error").innerText = gameStatus.error;
 			for (i=0; i < 14; i++){
 				var idString = "cardspot" + i;
 				document.getElementById(idString).style.background = "rgb(254, 217, 102)";
@@ -276,6 +281,7 @@
 			pileSelected = "";
 		}
 		else{
+			document.getElementById("error").innerText = "";
 			cardSelected = "";
 			pileSelected = "";
 			for (i=0; i<4; i++){
@@ -345,12 +351,14 @@
 				document.getElementById(x).style.height = 150 + 20*(gameStatus.Table[x].length-1);
 			}
 		}
-
-		var winnerArray = sortWinners(gameStatus.Winners);
-		document.getElementById("winners").innerHTML = "<tr> <th>Username</th> <th>Wins</th> </tr>";
-		for (i=0; i < 20; i++){
-			if (typeof(winnerArray[i]) != "undefined"){
-				document.getElementById("winners").innerHTML += "<tr> <td> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+		
+		if (typeof(gameStatus.Winners) != "undefined"){
+			var winnerArray = sortWinners(gameStatus.Winners);
+			document.getElementById("winners").innerHTML = "<tr> <th>Username</th> <th>Wins</th> </tr>";
+			for (i=0; i < 20; i++){
+				if (typeof(winnerArray[i]) != "undefined"){
+					document.getElementById("winners").innerHTML += "<tr> <td> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+				}
 			}
 		}
 		
@@ -378,7 +386,7 @@
 		var playerId = gameResult.winnerId;
 		var playerName = gameResult.winnerName;
 		var winnerList = gameResult.winnerList;
-		document.getElementById("broadcast").innerHTML = "The game is over. " + playerName + " won. Click \"Join Game\" to play again.";
+		document.getElementById("broadcast").innerText = "The game is over. " + playerName + " won. Click \"Join Game\" to play again.";
 		winnerArray = sortWinners(winnerList);
 		document.getElementById("winners").innerHTML = "<tr> <th>Username</th> <th>Wins</th> </tr>";
 		for (i=0; i < 30; i++){
@@ -399,23 +407,29 @@
 	}
 
 	function selectCardFromHand(cardString, idString){
+		document.getElementById("error").innerText = "";
 		if (pileSelected != "") {
-			document.getElementById("broadcast").innerHTML = "Deselect the pile first.";
+			document.getElementById("error").innerText = "Deselect the pile first.";
 			return;
 		}
 		if (cardSelected == cardString) {
 			cardSelected = "";
 			document.getElementById(idString).style.background = "rgb(254, 217, 102)";
-			document.getElementById("broadcast").innerHTML = cardString + " deselected.";
-			document.getElementById("replace").innerHTML = "";
-
+			document.getElementById("broadcast").innerText = cardString + " deselected.";
+			document.getElementById("error").innerText = "";
+			document.getElementById("replace").innerText = "";
 			return;
 		}
 		else{
 			cardSelected = cardString;
+			for (i=0; i < 14; i++){
+				var cardSpotId = "cardspot" + i;
+				document.getElementById(cardSpotId).style.background = "rgb(254, 217, 102)";
+			}
+			document.getElementById("broadcast").innerText = cardString + " selected.";
 			document.getElementById(idString).style.background = "green";
-			document.getElementById("replace").innerHTML = cardString;
-
+			document.getElementById("replace").innerText = cardString;
+			return;
 		}
 	}
 
@@ -430,11 +444,12 @@
 	}
 
 	function selectPile(string){
+		document.getElementById("error").innerText = "";
 		console.log(string);
 		if (cardSelected == "" && pileSelected == ""){
 			pileSelected = string;
 			document.getElementById(string).style.background = "green";
-			document.getElementById("broadcast").innerHTML = string + " pile selected.";
+			document.getElementById("broadcast").innerText = string + " pile selected.";
 			return;
 		}
 		if (cardSelected != "" && pileSelected == ""){
@@ -445,7 +460,7 @@
 			if (pileSelected == string){
 				pileSelected = "";
 				document.getElementById(string).style.background = "white";
-				document.getElementById("broadcast").innerHTML = string + " pile deselected.";
+				document.getElementById("broadcast").innerText = string + " pile deselected.";
 				return;
 			}
 			else{
@@ -454,7 +469,7 @@
 			return;
 		}
 		if (cardSelected != "" && pileSelected != ""){
-			document.getElementById("broadcast").innerHTML = "Should never reach this point without cheating.";
+			document.getElementById("broadcast").innerText = "Should never reach this point without cheating.";
 			return;
 		}
 	}
@@ -467,9 +482,5 @@
 	}
 
 </script>
-<pre><div class="testing_area">DEBUGGING BELOW
-<p class="message_holder"></p>
-</div>
-</pre>
 </div>
 </body></html>
