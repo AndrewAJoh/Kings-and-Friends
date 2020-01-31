@@ -82,25 +82,25 @@
             <th>Turn</th>
           </tr>
           <tr>
-            <td id="p1name">Player1</td>
+            <td id="p1name">Player 1</td>
             <td id="p1wins">0</td>
             <td id="p1numcards"></td>
             <td id="p1turn"></td>
           </tr>
           <tr>
-            <td id="p2name">Player2</td>
+            <td id="p2name">Player 2</td>
             <td id="p2wins">0</td>
             <td id="p2numcards"></td>
             <td id="p2turn"></td>
           </tr>
           <tr>
-            <td id="p3name">Player3</td>
+            <td id="p3name">Player 3</td>
             <td id="p3wins">0</td>
             <td id="p3numcards"></td>
             <td id="p3turn"></td>
           </tr>
           <tr>
-            <td id="p4name">Player4</td>
+            <td id="p4name">Player 4</td>
             <td id="p4wins">0</td>
             <td id="p4numcards"></td>
             <td id="p4turn"></td>
@@ -222,6 +222,7 @@
 	var hand = [];
 	var cardSelected = "";
 	var pileSelected = "";
+	var topThreeArray = [];
     var socket = io.connect('http://3.15.183.196:80');
 	socket.on( 'connect', function() {
 		socket.emit( 'connection', {
@@ -263,7 +264,7 @@
 	} )
 
     socket.on( 'game update', function( msg ) {
-        console.log( msg );
+		console.log(msg);
 		var gameStatus = JSON.parse(msg);
 		if ("broadcast" in gameStatus){
 			document.getElementById("broadcast").innerText = gameStatus.broadcast;
@@ -284,10 +285,16 @@
 			document.getElementById("error").innerText = "";
 			cardSelected = "";
 			pileSelected = "";
+			distributeColors();
 			for (i=0; i<4; i++){
 				if (typeof gameStatus.Player[i] != "undefined"){
 					if (gameStatus.Player[i].inGame == true){
 						document.getElementById("p"+(i+1)+"name").innerHTML = gameStatus.Player[i].name;
+						var name = gameStatus.Player[i].name;
+						if (checkUsernameColor(name) != undefined){
+							document.getElementById("p"+(i+1)+"name").style.color = checkUsernameColor(name);
+							document.getElementById("p"+(i+1)+"name").style.fontWeight = "bold";
+						}
 						var cards = gameStatus.Player[i].numcards;
 						document.getElementById("p"+(i+1)+"numcards").innerHTML = cards;
 
@@ -299,13 +306,13 @@
 						}
 					}
 					else{
-						document.getElementById("p"+(i+1)+"name").innerHTML = "Player" + (i+1);
+						document.getElementById("p"+(i+1)+"name").innerHTML = "Player " + (i+1);
 						document.getElementById("p"+(i+1)+"numcards").innerHTML = "0";
 						document.getElementById("p"+(i+1)+"wins").innerHTML = "0";
 					}
 				}
 				else{
-					document.getElementById("p"+(i+1)+"name").innerHTML = "Player" + (i+1);
+					document.getElementById("p"+(i+1)+"name").innerHTML = "Player " + (i+1);
 					document.getElementById("p"+(i+1)+"numcards").innerHTML = "0";
 					document.getElementById("p"+(i+1)+"wins").innerHTML = "0";
 				}
@@ -352,12 +359,34 @@
 			}
 		}
 		
-		if (typeof(gameStatus.Winners) != "undefined"){
-			var winnerArray = sortWinners(gameStatus.Winners);
-			document.getElementById("winners").innerHTML = "<tr> <th>Username</th> <th>Wins</th> </tr>";
-			for (i=0; i < 20; i++){
-				if (typeof(winnerArray[i]) != "undefined"){
-					document.getElementById("winners").innerHTML += "<tr> <td> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+		function distributeColors(){
+			if (typeof(gameStatus.Winners) != "undefined"){
+				var winnerArray = sortWinners(gameStatus.Winners);
+				document.getElementById("winners").innerHTML = "<tr> <th>Username</th> <th>Wins</th> </tr>";
+				var m = 0;
+				scoreToCompare = winnerArray[0][1];
+				for (i=0; i < 20; i++){
+					if (typeof(winnerArray[i]) != "undefined"){
+						if (winnerArray[i][1] < scoreToCompare){
+							m += 1;
+							scoreToCompare = winnerArray[i][1];
+						}
+						if (m == 0){
+							document.getElementById("winners").innerHTML += "<tr> <td style=\"color: #daa520; font-weight: bold;\"> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+							topThreeArray.push([winnerArray[i][0], "#daa520"]);
+						}
+						else if (m == 1){
+							document.getElementById("winners").innerHTML += "<tr> <td style=\"color: #d0d2d1; font-weight: bold;\"> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+							topThreeArray.push([winnerArray[i][0], "#d0d2d1"]);
+						}
+						else if (m == 2){
+							document.getElementById("winners").innerHTML += "<tr> <td style=\"color: #b08d57; font-weight: bold;\"> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+							topThreeArray.push([winnerArray[i][0], "#b08d57"]);
+						}
+						else{
+							document.getElementById("winners").innerHTML += "<tr> <td> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+						}
+					}
 				}
 			}
 		}
@@ -389,12 +418,41 @@
 		document.getElementById("broadcast").innerText = "The game is over. " + playerName + " won. Click \"Join Game\" to play again.";
 		winnerArray = sortWinners(winnerList);
 		document.getElementById("winners").innerHTML = "<tr> <th>Username</th> <th>Wins</th> </tr>";
-		for (i=0; i < 30; i++){
+		var m = 0;
+		scoreToCompare = winnerArray[0][1];
+		for (i=0; i < 20; i++){
 			if (typeof(winnerArray[i]) != "undefined"){
-				document.getElementById("winners").innerHTML += "<tr> <td> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+				if (winnerArray[i][1] < scoreToCompare){
+					m += 1;
+					scoreToCompare = winnerArray[i][1];
+				}
+				if (m == 0){
+					document.getElementById("winners").innerHTML += "<tr> <td style=\"color: #daa520; font-weight: bold;\"> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+					topThreeArray.push([winnerArray[i][0], "#daa520"]);
+				}
+				else if (m == 1){
+					document.getElementById("winners").innerHTML += "<tr> <td style=\"color: #d0d2d1; font-weight: bold;\"> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+					topThreeArray.push([winnerArray[i][0], "#d0d2d1"]);
+				}
+				else if (m == 2){
+					document.getElementById("winners").innerHTML += "<tr> <td style=\"color: #b08d57; font-weight: bold;\"> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+					topThreeArray.push([winnerArray[i][0], "#b08d57"]);
+				}
+				else{
+					document.getElementById("winners").innerHTML += "<tr> <td> " + winnerArray[i][0] + " </td> <td> " + winnerArray[i][1] + " </td>";
+				}
 			}
 		}
 	} )
+	
+	function checkUsernameColor(name){
+		for (j=0; j < topThreeArray.length; j++){
+			if (name == topThreeArray[j][0]){
+				return topThreeArray[j][1];
+			}
+		}
+		return undefined;
+	}
 	
 	function sortWinners(winnerList){
 		var items = Object.keys(winnerList).map(function(key) {
@@ -435,8 +493,6 @@
 
 	function placeCardFromHand(pile){
 		var card = document.getElementById("replace").innerHTML;
-		console.log(card);
-		console.log(pile);
 		socket.emit('place card', {
 			input_card : card,
 			input_pile : pile
@@ -445,7 +501,6 @@
 
 	function selectPile(string){
 		document.getElementById("error").innerText = "";
-		console.log(string);
 		if (cardSelected == "" && pileSelected == ""){
 			pileSelected = string;
 			document.getElementById(string).style.background = "green";
