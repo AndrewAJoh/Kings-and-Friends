@@ -169,7 +169,7 @@
                     <h2>W</h2>
                   </td>
                   <td id="Deck" class="card" style="position:relative; border:solid;">
-                    <h2> Deck </h2>
+                    <img src="/static/photos/card.png" alt="Deck" align=center>
                   </td>
                   <td id="E" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
                     <h2>E</h2>
@@ -367,10 +367,10 @@
 				document.getElementById(x).style.background = "white";
 				for (i=0; i < gameStatus.Table[x].length; i++){
 						if (i==0){
-							document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" alt=\"" + gameStatus.Table[x][i] + "\" align=center style=\"position:absolute; left: 11px; top: 0px; z-index: " + i + ";\">";
+							document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" alt=\"" + gameStatus.Table[x][i] + "\" align=center style=\"position:absolute; left: 11px; top: 5px; z-index: " + i + ";\">";
                         }
                         else{
-                            document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" alt=\"" + gameStatus.Table[x][i] + "\" align=center style=\"position:absolute; left: 11px; top: " + i*20 + "px; z-index: " + i + ";\">";
+                            document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" alt=\"" + gameStatus.Table[x][i] + "\" align=center style=\"position:absolute; left: 11px; top: " + (i*20) + 5 + "px; z-index: " + i + ";\">";
 						}
 				}
 				document.getElementById(x).style.height = 150 + 20*(gameStatus.Table[x].length-1);
