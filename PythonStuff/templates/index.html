@@ -370,7 +370,7 @@
 							document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" alt=\"" + gameStatus.Table[x][i] + "\" align=center style=\"position:absolute; left: 11px; top: 5px; z-index: " + i + ";\">";
                         }
                         else{
-                            document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" alt=\"" + gameStatus.Table[x][i] + "\" align=center style=\"position:absolute; left: 11px; top: " + (i*20) + 5 + "px; z-index: " + i + ";\">";
+                            document.getElementById(x).innerHTML += "<img src=\"/static/photos/" + gameStatus.Table[x][i] + ".png\" alt=\"" + gameStatus.Table[x][i] + "\" align=center style=\"position:absolute; left: 11px; top: " + (5+i*20) + "px; z-index: " + i + ";\">";
 						}
 				}
 				document.getElementById(x).style.height = 150 + 20*(gameStatus.Table[x].length-1);
