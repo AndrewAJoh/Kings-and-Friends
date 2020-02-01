@@ -110,6 +110,7 @@
   <table id="bodytable" class="color3" style="width:100%;padding:15px; border:none;">
     <tbody class="color4"><tr align="center" valign="top">
       <td id="rowscoreBoard" class="color5" style="width:20%; padding:10px;">
+		<h3 style="padding: 10px"> Current Game </h3>
         <table id="scoreBoard" class="colorScoreBoard" style="border:solid;" align="center">
           <tbody class="color4"><tr>
             <th>Username</th>
@@ -150,7 +151,7 @@
       <td id="rowtable" class="color6" style="border:none;">
         <table id="tablehandsplit" style="width:100%; border-collapse:collapse;">
           <tbody><tr class="color8">
-            <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;background-position:center;">
+            <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:300px;background-position:center;">
               <table id="tableArray" style="border:none; background:none;" align="center">
                 <tbody><tr id="NN">
                   <td id="NW" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
@@ -168,7 +169,7 @@
                     <h2>W</h2>
                   </td>
                   <td id="Deck" class="card" style="position:relative; border:solid;">
-                    <h2>Deck</h2>
+                    <h2> Deck </h2>
                   </td>
                   <td id="E" class="card" style="position:relative; border:solid;" onclick="selectPile(this.id)">
                     <h2>E</h2>
@@ -229,6 +230,7 @@
         </tbody></table>
       </td>
 	   <td class="color7" style="width: 20%; padding:10px;">
+	    <h3 style = "padding: 10px"> List of Kings </h3>
 		<table id="winBoard" class="colorWinBoard" style="border:solid;" align="center">
           <tbody id="winners" class="color11">
 			  <tr>
@@ -416,7 +418,7 @@
 			for (i=0; i < hand.length; i++){
 				var idString = "cardspot" + i;
 				var picName = hand[i]["string"];
-				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:selectCardFromHand(&quot;" + picName + "&quot;, &quot;" + idString + "&quot;)\" src=\"/static/photos/" + picName + ".png\" alt=\"" + picName + "\" align=center>";
+				document.getElementById(idString).innerHTML += "<br> <img onclick=\"javascript:selectCardFromHand(&quot;" + picName + "&quot;, &quot;" + idString + "&quot;)\" src=\"/static/photos/" + picName + ".png\" alt=\"" + picName + "\" align=center style=\"padding-bottom: 20px;\">";
 			}
 			return;
 		}
