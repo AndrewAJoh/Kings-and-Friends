@@ -60,7 +60,7 @@ def distributeCards(playerArray, deck):
     # Distributes 7 cards to each player
     for player in playerArray:
         i = 0
-        while i < 1:
+        while i < 7:
             thisCard = deck.pop()
             thisCard.position = i
             player.hand.append(thisCard)

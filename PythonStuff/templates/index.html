@@ -1,9 +1,45 @@
 <html><head><style>
-  body {
-    background-color: rgb(13, 80, 13);
+  .color1 {
+    background-color: #d5f4e6;
+  }
+  .color2 {
+	background-color: #d5f4e6;
+  }
+  .color3 {
+    background-color: #80ced6;
+  }
+  .color4 {
+    background-color: white;
+  }
+  .color5 {
+    background-color: #fefbd8;
+  }
+  .color6 {
+    background-color: #80ced6;
+  }
+  .color7 {
+    background-color: #fefbd8;
+  }
+  .color8 {
+    background-color: #80ced6;
+  }
+  .color9 {
+    background-color: #80ced6;
+  }
+  .color10 {
+    background-color: #80ced6;
+  }
+  .color11 {
+    background-color: white;
+  }
+  .colorScoreBoard{
+    background-color: #618685;
+  }
+  .colorWinBoard{
+    background-color: #618685;
   }
   .button {
-    background-color: rgb(128, 128, 128);
+    background-color: #618685;
     border: none;
     color: black;
     padding: 15px 32px;
@@ -13,7 +49,7 @@
     font-size: 16px;
   }
   table {
-    background-color: white;
+    background-color: #80ced6;
     align: center top;
     border: solid;
   }
@@ -61,21 +97,21 @@
   #rowHand1,
   #rowHand2 {
     padding=15px;
-    background-color: rgb(254, 217, 102);
+    background-color: #fefbd8;
   }
   .testing_area {
-	background-color: rgb(256, 256, 256);
+	background-color: #fefbd8;
   }
 </style>
 
-</head><body>
-<div class="wrapper">
+</head><body class="color1">
+<div class="wrapper" class="color2">
   <h1 style="text-align:center">Kings and Friends</h1>
-  <table id="bodytable" style="width:100%;padding:15px; border:none;">
-    <tbody><tr align="center" valign="top">
-      <td id="rowscoreBoard" style="width:20%; padding:10px;">
-        <table id="scoreBoard" style="border:solid;" align="center">
-          <tbody><tr>
+  <table id="bodytable" class="color3" style="width:100%;padding:15px; border:none;">
+    <tbody class="color4"><tr align="center" valign="top">
+      <td id="rowscoreBoard" class="color5" style="width:20%; padding:10px;">
+        <table id="scoreBoard" class="colorScoreBoard" style="border:solid;" align="center">
+          <tbody class="color4"><tr>
             <th>Username</th>
             <th>Wins</th>
             <th>Cards in Hand</th>
@@ -106,14 +142,14 @@
             <td id="p4turn"></td>
           </tr>
     </tbody></table>
-		<h2 id="replace">No Card Selected</h2>
+		<div id="replace"></div>
 		<p id="broadcast"></p>
 		<div style="height: 100px"> </div>
 		<p id="error"></p>
       </td>
-      <td id="rowtable" style="border:none;">
+      <td id="rowtable" class="color6" style="border:none;">
         <table id="tablehandsplit" style="width:100%; border-collapse:collapse;">
-          <tbody><tr>
+          <tbody><tr class="color8">
             <td colspan="7" id="table" background="/static/photos/tablelogo.png" style="border:solid;background-size:500px;background-position:center;">
               <table id="tableArray" style="border:none; background:none;" align="center">
                 <tbody><tr id="NN">
@@ -152,11 +188,11 @@
               </tbody></table>
             </td>
           </tr>
-          <tr>
+          <tr class="color9">
             <td id="hand">
-              <table id="tableHand" style="border:none" align="center">
+              <table id="tableHand" class="color10" style="border:none" align="center">
                 <tbody><tr id="rowHand1">
-                  <td id="cardspot0" class="card" >
+                  <td id="cardspot0" class="card">
                   </td>
                   <td id="cardspot1" class="card">
                   </td>
@@ -192,9 +228,9 @@
           </tr>
         </tbody></table>
       </td>
-	   <td style="width: 20%; padding:10px;">
-		<table id="winBoard" style="border:solid;" align="center">
-          <tbody id="winners">
+	   <td class="color7" style="width: 20%; padding:10px;">
+		<table id="winBoard" class="colorWinBoard" style="border:solid;" align="center">
+          <tbody id="winners" class="color11">
 			  <tr>
 				<th>Username</th>
 				<th>Wins</th>
@@ -238,26 +274,6 @@
 		} )
 	} )
 
-	var form = $( '#placecard' ).on( 'submit', function( e ) {
-		e.preventDefault();
-		var card = document.getElementById("replace").innerHTML;
-		let pile = $( 'input.selector:checked' ).val();
-		socket.emit( 'place card', {
-			input_card : card,
-			input_pile : pile
-		} )
-	} )
-
-	var form = $( '#movepile' ).on( 'submit', function( e ) {
-		e.preventDefault();
-		let startPile = $( '#StartPile option:selected' ).text();
-		let endPile = $( '#EndPile option:selected' ).text();
-		socket.emit( 'move pile', {
-			start_pile : startPile,
-			end_pile : endPile
-		} )
-	} )
-
 	var form = $( '#endturn' ).on( 'submit', function( e ) {
 		e.preventDefault()
 		socket.emit( 'end turn' )
@@ -273,7 +289,7 @@
 			document.getElementById("error").innerText = gameStatus.error;
 			for (i=0; i < 14; i++){
 				var idString = "cardspot" + i;
-				document.getElementById(idString).style.background = "rgb(254, 217, 102)";
+				document.getElementById(idString).style.background = "#fefbd8";
 			}
 			cardSelected = "";
 			if (pileSelected != ""){
@@ -360,7 +376,7 @@
 		}
 		
 		function distributeColors(){
-			if (typeof(gameStatus.Winners) != "undefined"){
+			if (typeof(gameStatus.Winners[0]) != "undefined"){
 				var winnerArray = sortWinners(gameStatus.Winners);
 				document.getElementById("winners").innerHTML = "<tr> <th>Username</th> <th>Wins</th> </tr>";
 				var m = 0;
@@ -395,7 +411,7 @@
 			for (i=0; i < 14; i++){
 				var idString = "cardspot" + i;
 				document.getElementById(idString).innerHTML = "";
-                document.getElementById(idString).style.background = "rgb(254, 217, 102)";
+                document.getElementById(idString).style.background = "#fefbd8";
 			}
 			for (i=0; i < hand.length; i++){
 				var idString = "cardspot" + i;
@@ -472,29 +488,26 @@
 		}
 		if (cardSelected == cardString) {
 			cardSelected = "";
-			document.getElementById(idString).style.background = "rgb(254, 217, 102)";
+			document.getElementById(idString).style.background = "#fefbd8";
 			document.getElementById("broadcast").innerText = cardString + " deselected.";
 			document.getElementById("error").innerText = "";
-			document.getElementById("replace").innerText = "";
 			return;
 		}
 		else{
 			cardSelected = cardString;
 			for (i=0; i < 14; i++){
 				var cardSpotId = "cardspot" + i;
-				document.getElementById(cardSpotId).style.background = "rgb(254, 217, 102)";
+				document.getElementById(cardSpotId).style.background = "#fefbd8";
 			}
 			document.getElementById("broadcast").innerText = cardString + " selected.";
-			document.getElementById(idString).style.background = "green";
-			document.getElementById("replace").innerText = cardString;
+			document.getElementById(idString).style.background = "#618685";
 			return;
 		}
 	}
 
 	function placeCardFromHand(pile){
-		var card = document.getElementById("replace").innerHTML;
 		socket.emit('place card', {
-			input_card : card,
+			input_card : cardSelected,
 			input_pile : pile
 		 } )
 	}
@@ -503,7 +516,7 @@
 		document.getElementById("error").innerText = "";
 		if (cardSelected == "" && pileSelected == ""){
 			pileSelected = string;
-			document.getElementById(string).style.background = "green";
+			document.getElementById(string).style.background = "#618685";
 			document.getElementById("broadcast").innerText = string + " pile selected.";
 			return;
 		}
